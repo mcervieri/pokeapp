@@ -25,6 +25,7 @@
 - [API Endpoints](#api-endpoints)
 - [Course Modules](#course-modules)
 - [Roadmap](#roadmap)
+- [Future — TCG Module](#future--tcg-module)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -41,6 +42,8 @@ On top of that data layer, users can:
 - Track their **Pokédex progress** (seen / caught per Pokémon)
 - **Favorite** Pokémon and write comments and ratings
 - Everything tied to a **user account** with JWT authentication
+
+This project is also documented as a **self-paced course** — every decision is explained, nothing is magic.
 
 ---
 
@@ -203,8 +206,6 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 ```
-
-> This file is git-ignored — never commit credentials.
 
 ### 4. Build and run
 
@@ -388,7 +389,7 @@ This project is built as a step-by-step course. Each module explains **what**, *
 - [x] Project structure and Maven setup
 - [x] Docker + PostgreSQL configuration
 - [x] Spring Boot entry point and YAML config
-- [ ] Flyway database migrations
+- [x] Flyway database migrations
 - [ ] JPA entities and repositories
 - [ ] JWT authentication (register / login)
 - [ ] Data seeder — import all Pokémon from CSV
@@ -397,6 +398,176 @@ This project is built as a step-by-step course. Each module explains **what**, *
 - [ ] Tests
 - [ ] Docker deployment
 - [ ] Cloud hosting
+- [ ] TCG module (cards, sets, attacks, deck builder)
+- [ ] TCG Pocket module (cards, packs, wonder picks, collection tracker)
+
+---
+
+## Future — TCG & TCG Pocket Modules
+
+![Planned](https://img.shields.io/badge/Status-Planned-blueviolet?style=for-the-badge)
+![No External API](https://img.shields.io/badge/Data-100%25_Own_Database-2ea44f?style=for-the-badge)
+![TCG](https://img.shields.io/badge/Module-pokeapp--tcg-EF5350?style=for-the-badge)
+![TCG Pocket](https://img.shields.io/badge/Module-pokeapp--tcg--pocket-FF9800?style=for-the-badge)
+
+Just like the main game module, **both TCG modules will own their data entirely** — no external API dependencies at runtime. Card data will be researched, structured, and seeded directly into our own PostgreSQL database from open community datasets and official sources.
+
+This makes PokeApp one of the most complete self-contained Pokémon platforms ever built.
+
+### Why two separate modules?
+
+TCG and TCG Pocket are fundamentally different games:
+
+| | TCG (Physical) | TCG Pocket |
+|---|---|---|
+| Deck size | 60 cards | 20 cards |
+| Energy system | Energy cards attached | Energize 1 per turn, no energy cards |
+| Formats | Standard, Expanded, Unlimited | Mythical Island, etc. |
+| Card subtypes | Basic, Stage 1, Stage 2, EX, GX, V, VMAX, VSTAR... | Basic, Stage 1, Stage 2, ex |
+| Retreating | Energy cost | No retreat cost |
+| Card source | Physical sets since 1996 | Digital-only packs since 2024 |
+| User feature | Deck builder | Collection tracker + Wonder Pick |
+
+They share the concept of a "card" and "set" but the mechanics, data shape, and user features are different enough to warrant separate modules.
+
+---
+
+### Module: `pokeapp-tcg` — Trading Card Game
+
+The classic physical card game, covering every expansion from Base Set (1996) to the latest Scarlet & Violet sets.
+
+#### Module structure
+
+```
+pokeapp-tcg/
+├── entity/
+│   ├── TcgSeries.java          ← Series grouping (Base, XY, Sun & Moon, Sword & Shield...)
+│   ├── TcgSet.java             ← Individual expansion (Base Set, Jungle, Paradox Rift...)
+│   ├── TcgCard.java            ← Every card: Pokémon, Trainer, Energy
+│   ├── TcgAttack.java          ← Attacks with energy cost, damage, effect
+│   ├── TcgAbility.java         ← Card abilities (Poké-Power, Poké-Body, Ability)
+│   ├── TcgCardWeakness.java    ← Per-card weakness
+│   ├── TcgCardResistance.java  ← Per-card resistance
+│   ├── TcgCardLegality.java    ← Standard / Expanded / Unlimited legality
+│   ├── TcgDeck.java            ← User-created 60-card deck
+│   └── TcgDeckCard.java        ← Card + quantity in a deck
+├── repository/
+├── service/
+└── controller/
+```
+
+#### Planned database tables (TCG)
+
+| Table | Description |
+|---|---|
+| `tcg_series` | Series groupings (Base, XY, Sun & Moon, Sword & Shield, Scarlet & Violet) |
+| `tcg_set` | Individual expansions with symbol, release date, total cards |
+| `tcg_card` | Cards with name, HP, type, subtype, rarity, artist, card number, image |
+| `tcg_attack` | Attacks per card — energy cost, damage, effect text |
+| `tcg_ability` | Card abilities — Poké-Power, Poké-Body, Ability |
+| `tcg_card_weakness` | Per-card weakness (type + multiplier e.g. ×2) |
+| `tcg_card_resistance` | Per-card resistance (type + modifier e.g. −30) |
+| `tcg_card_legality` | Standard / Expanded / Unlimited legality per card |
+| `tcg_deck` | User-created 60-card decks |
+| `tcg_deck_card` | Cards in a deck with quantity (max 4 per card) |
+
+#### Planned TCG endpoints
+
+```
+GET    /api/tcg/series                    List all series
+GET    /api/tcg/sets                      List all sets (filterable by series)
+GET    /api/tcg/sets/{id}                 Set detail
+GET    /api/tcg/sets/{id}/cards           All cards in a set
+GET    /api/tcg/cards                     List cards (filter: set, type, rarity, name, legality)
+GET    /api/tcg/cards/{id}               Full card detail with attacks, abilities, legality
+GET    /api/tcg/cards/{id}/variants      Alternate art / promo variants of a card
+
+POST   /api/tcg/decks                    Create a deck (protected)
+GET    /api/tcg/decks                    List user's decks (protected)
+GET    /api/tcg/decks/{id}              Deck detail with all cards
+PUT    /api/tcg/decks/{id}              Update deck (protected, owner only)
+DELETE /api/tcg/decks/{id}             Delete deck (protected, owner only)
+GET    /api/tcg/decks/{id}/validate     Check deck legality for a format (protected)
+```
+
+---
+
+### Module: `pokeapp-tcg-pocket` — TCG Pocket
+
+The digital-only mobile card game released in 2024, with its own unique mechanics, pack system, and Wonder Pick feature.
+
+#### Module structure
+
+```
+pokeapp-tcg-pocket/
+├── entity/
+│   ├── PocketExpansion.java        ← Genetic Apex, Mythical Island, Triumphant Light...
+│   ├── PocketPack.java             ← Charizard pack, Mewtwo pack, Pikachu pack...
+│   ├── PocketCard.java             ← Cards with pocket-specific mechanics
+│   ├── PocketAttack.java           ← Attacks with energize cost (no energy cards)
+│   ├── PocketAbility.java          ← Card abilities
+│   ├── PocketCardWeakness.java     ← Per-card weakness
+│   ├── UserCollection.java         ← Cards owned by user + quantity
+│   ├── UserWonderPick.java         ← Wonder Pick history
+│   └── PocketDeck.java             ← User-created 20-card deck
+├── repository/
+├── service/
+└── controller/
+```
+
+#### Planned database tables (TCG Pocket)
+
+| Table | Description |
+|---|---|
+| `pocket_expansion` | Expansions (Genetic Apex, Mythical Island, Triumphant Light...) |
+| `pocket_pack` | Packs within an expansion (Charizard, Mewtwo, Pikachu pack...) |
+| `pocket_card` | Cards with name, HP, type, subtype, rarity, image, pack points cost |
+| `pocket_attack` | Attacks with energize cost, damage, effect (no energy cards) |
+| `pocket_ability` | Card abilities |
+| `pocket_card_weakness` | Per-card weakness |
+| `pocket_card_pack` | Which packs a card appears in and at what rarity |
+| `user_pocket_collection` | Cards owned by a user + quantity (up to 2 per card) |
+| `user_wonder_pick` | Wonder Pick stamps and history per user |
+| `pocket_deck` | User-created 20-card decks |
+| `pocket_deck_card` | Cards in a deck with quantity (max 2 per card) |
+
+#### Planned TCG Pocket endpoints
+
+```
+GET    /api/pocket/expansions                  List all expansions
+GET    /api/pocket/expansions/{id}             Expansion detail
+GET    /api/pocket/expansions/{id}/cards       All cards in an expansion
+GET    /api/pocket/packs                       List all packs
+GET    /api/pocket/packs/{id}/cards            Cards available in a pack by rarity
+GET    /api/pocket/cards                       List cards (filter: expansion, type, rarity, name)
+GET    /api/pocket/cards/{id}                  Full card detail
+
+GET    /api/pocket/collection                  Get user's collection (protected)
+PUT    /api/pocket/collection/{cardId}         Update card quantity in collection (protected)
+GET    /api/pocket/collection/missing          Cards not yet in collection (protected)
+GET    /api/pocket/collection/tradeable        Cards available for Wonder Pick (protected)
+
+POST   /api/pocket/decks                       Create a 20-card deck (protected)
+GET    /api/pocket/decks                       List user's decks (protected)
+GET    /api/pocket/decks/{id}                  Deck detail
+PUT    /api/pocket/decks/{id}                  Update deck (protected, owner only)
+DELETE /api/pocket/decks/{id}                  Delete deck (protected, owner only)
+```
+
+---
+
+### Full future module architecture
+
+```
+pokeapp/
+├── pokeapp-domain/          ← Main game data (current)
+├── pokeapp-application/     ← Main game logic (current)
+├── pokeapp-web/             ← HTTP layer — shared entry point (current)
+├── pokeapp-tcg/             ← TCG physical card game (planned)
+└── pokeapp-tcg-pocket/      ← TCG Pocket digital game (planned)
+```
+
+All modules share the same PostgreSQL database and the same `pokeapp-web` entry point. The only cross-module reference is `pokemon_species` — a card depicts a species from the main game.
 
 ---
 
