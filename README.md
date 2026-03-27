@@ -1,11 +1,20 @@
-# 🎮 PokeApp
+# PokeApp
+
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-Multi--module-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-In_Development-orange?style=for-the-badge)
 
 > A full-stack Pokémon platform built from scratch — own database, own API, own frontend.
 > Built as a learning course covering Java 21, Spring Boot 3, PostgreSQL, and React.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [About the Project](#about-the-project)
 - [Tech Stack](#tech-stack)
@@ -33,40 +42,35 @@ On top of that data layer, users can:
 - **Favorite** Pokémon and write comments and ratings
 - Everything tied to a **user account** with JWT authentication
 
-This project is also documented as a **self-paced course** — every decision is explained, nothing is magic.
-
 ---
 
 ## Tech Stack
 
 ### Backend
-| Technology | Version | Purpose |
-|---|---|---|
-| Java | 21 | Language |
-| Spring Boot | 3.3.x | Application framework |
-| Spring Security | 6.x | Authentication & authorization |
-| Spring Data JPA | 3.3.x | Database access layer |
-| Hibernate | 6.x | JPA implementation |
-| PostgreSQL | 16 | Relational database |
-| Flyway | 10.x | Database migrations |
-| JWT (jjwt) | 0.12.x | Token-based auth |
-| Lombok | Latest | Boilerplate reduction |
-| Maven | 3.9.x | Build tool |
+
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-6.x-6DB33F?style=flat-square&logo=spring-security&logoColor=white)
+![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-3.3.x-6DB33F?style=flat-square&logo=spring&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-6.x-59666C?style=flat-square&logo=hibernate&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Flyway](https://img.shields.io/badge/Flyway-10.x-CC0200?style=flat-square&logo=flyway&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-jjwt_0.12.x-000000?style=flat-square&logo=json-web-tokens&logoColor=white)
+![Lombok](https://img.shields.io/badge/Lombok-latest-pink?style=flat-square)
+![Maven](https://img.shields.io/badge/Maven-3.9.x-C71A36?style=flat-square&logo=apache-maven&logoColor=white)
 
 ### Frontend *(coming soon)*
-| Technology | Purpose |
-|---|---|
-| React 18 | UI framework |
-| Vite | Build tool |
-| React Router | Client-side routing |
-| Axios | HTTP client |
-| TailwindCSS | Styling |
+
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-6.x-CA4245?style=flat-square&logo=react-router&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-1.x-5A29E4?style=flat-square&logo=axios&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-06B6D4?style=flat-square&logo=tailwind-css&logoColor=white)
 
 ### Infrastructure
-| Technology | Purpose |
-|---|---|
-| Docker + Docker Compose | Local PostgreSQL container |
-| GitHub | Version control |
+
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-Version_Control-181717?style=flat-square&logo=github&logoColor=white)
 
 ---
 
@@ -147,10 +151,10 @@ Created and modified by users.
 
 ### Prerequisites
 
-- [Java 21](https://adoptium.net/)
-- [Maven 3.9+](https://maven.apache.org/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [Git](https://git-scm.com/)
+![Java](https://img.shields.io/badge/Java-21+-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-3.9+-C71A36?style=flat-square&logo=apache-maven&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker_Desktop-required-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Git](https://img.shields.io/badge/Git-required-F05032?style=flat-square&logo=git&logoColor=white)
 
 ### 1. Clone the repository
 
@@ -200,7 +204,7 @@ spring:
     baseline-on-migrate: true
 ```
 
-> ⚠️ This file is git-ignored — never commit credentials.
+> This file is git-ignored — never commit credentials.
 
 ### 4. Build and run
 
@@ -344,38 +348,38 @@ This project is built as a step-by-step course. Each module explains **what**, *
 
 | Module | Topic | Status |
 |---|---|---|
-| 1.1–1.2 | Maven multi-module structure | ✅ Done |
-| 1.3 | Docker + PostgreSQL setup | ✅ Done |
-| 1.4 | Spring Boot entry point | ✅ Done |
-| 1.5 | Application configuration (YAML) | ✅ Done |
-| 1.6 | Flyway migrations — all 27 tables | 🔄 In progress |
-| 2.1–2.4 | JPA entities + repositories | ⏳ Pending |
-| 3.1–3.6 | Authentication — JWT + Spring Security | ⏳ Pending |
-| 4.1–4.4 | CSV data seeder — all Pokémon imported | ⏳ Pending |
-| 5.1–5.6 | Pokémon REST controllers + DTOs | ⏳ Pending |
-| 6.1–6.4 | Competitive team endpoints | ⏳ Pending |
-| 7.1–7.4 | Favorites, comments, ratings, Pokédex | ⏳ Pending |
-| 8.1–8.4 | Error handling, Swagger, CORS | ⏳ Pending |
+| 1.1–1.2 | Maven multi-module structure | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 1.3 | Docker + PostgreSQL setup | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 1.4 | Spring Boot entry point | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 1.5 | Application configuration (YAML) | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 1.6 | Flyway migrations — all 27 tables | ![In Progress](https://img.shields.io/badge/In_Progress-orange?style=flat-square) |
+| 2.1–2.4 | JPA entities + repositories | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 3.1–3.6 | Authentication — JWT + Spring Security | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 4.1–4.4 | CSV data seeder — all Pokémon imported | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 5.1–5.6 | Pokémon REST controllers + DTOs | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 6.1–6.4 | Competitive team endpoints | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 7.1–7.4 | Favorites, comments, ratings, Pokédex | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 8.1–8.4 | Error handling, Swagger, CORS | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
 ### Phase 2 — Frontend *(coming after backend is complete)*
 
 | Module | Topic | Status |
 |---|---|---|
-| F1 | Vite + React setup, routing | ⏳ Pending |
-| F2 | Auth pages — register, login | ⏳ Pending |
-| F3 | Pokédex — list, filters, detail | ⏳ Pending |
-| F4 | Team builder UI | ⏳ Pending |
-| F5 | User profile — favorites, progress | ⏳ Pending |
-| F6 | Comments, ratings, social | ⏳ Pending |
-| F7 | Polish — responsive, loading, errors | ⏳ Pending |
+| F1 | Vite + React setup, routing | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F2 | Auth pages — register, login | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F3 | Pokédex — list, filters, detail | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F4 | Team builder UI | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F5 | User profile — favorites, progress | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F6 | Comments, ratings, social | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F7 | Polish — responsive, loading, errors | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
 ### Phase 3 — Extras *(optional)*
 
 | Module | Topic | Status |
 |---|---|---|
-| E1 | Unit + integration tests (JUnit + Mockito) | ⏳ Pending |
-| E2 | Docker — containerize the app | ⏳ Pending |
-| E3 | Deploy to cloud (Railway / Render) | ⏳ Pending |
+| E1 | Unit + integration tests (JUnit + Mockito) | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E2 | Docker — containerize the app | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E3 | Deploy to cloud (Railway / Render) | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
 ---
 
