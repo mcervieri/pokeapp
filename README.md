@@ -341,7 +341,7 @@ POST   /api/pokemon/{id}/ratings        Rate a Pokémon (protected)
 
 ---
 
-## Course Modules
+## Modules
 
 This project is built as a step-by-step course. Each module explains **what**, **why**, and **how**.
 
@@ -353,8 +353,8 @@ This project is built as a step-by-step course. Each module explains **what**, *
 | 1.3 | Docker + PostgreSQL setup | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 1.4 | Spring Boot entry point | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 1.5 | Application configuration (YAML) | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 1.6 | Flyway migrations — all 27 tables | ![In Progress](https://img.shields.io/badge/In_Progress-orange?style=flat-square) |
-| 2.1–2.4 | JPA entities + repositories | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 1.6 | Flyway migrations — all 27 tables | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 2.1–2.4 | JPA entities + repositories | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 3.1–3.6 | Authentication — JWT + Spring Security | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | 4.1–4.4 | CSV data seeder — all Pokémon imported | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | 5.1–5.6 | Pokémon REST controllers + DTOs | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
@@ -390,7 +390,7 @@ This project is built as a step-by-step course. Each module explains **what**, *
 - [x] Docker + PostgreSQL configuration
 - [x] Spring Boot entry point and YAML config
 - [x] Flyway database migrations
-- [ ] JPA entities and repositories
+- [x] JPA entities and repositories
 - [ ] JWT authentication (register / login)
 - [ ] Data seeder — import all Pokémon from CSV
 - [ ] Full REST API
