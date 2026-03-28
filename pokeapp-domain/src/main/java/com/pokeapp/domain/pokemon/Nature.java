@@ -24,7 +24,7 @@ public class Nature {
     @JoinColumn(name = "decreased_stat_id")
     private Stat decreasedStat;
 
-    protected Nature() {
+    public Nature() {
     }
 
     public Nature(Integer pokeapiId, String name, Stat increasedStat, Stat decreasedStat) {

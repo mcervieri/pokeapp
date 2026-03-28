@@ -21,7 +21,7 @@ public class PokemonAbility {
     @Column(name = "is_hidden", nullable = false)
     private boolean hidden;
 
-    protected PokemonAbility() {
+    public PokemonAbility() {
     }
 
     public PokemonAbility(Pokemon pokemon, Ability ability, Integer slot, boolean hidden) {

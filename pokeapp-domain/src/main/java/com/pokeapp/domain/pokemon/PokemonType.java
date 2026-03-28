@@ -18,7 +18,7 @@ public class PokemonType {
     @JoinColumn(name = "type_id", nullable = false)
     private Type type;
 
-    protected PokemonType() {
+    public PokemonType() {
     }
 
     public PokemonType(Pokemon pokemon, Type type, Integer slot) {

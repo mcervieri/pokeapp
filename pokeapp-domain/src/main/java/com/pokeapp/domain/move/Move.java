@@ -40,7 +40,7 @@ public class Move {
     @Column(name = "effect_text", columnDefinition = "TEXT")
     private String effectText;
 
-    protected Move() {
+    public Move() {
     }
 
     public Move(Integer pokeapiId, String name, Type type, DamageClass damageClass,

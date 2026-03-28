@@ -23,7 +23,7 @@ public class TypeEffectiveness {
     @Column(nullable = false, precision = 4, scale = 2)
     private BigDecimal multiplier;
 
-    protected TypeEffectiveness() {
+    public TypeEffectiveness() {
     }
 
     public TypeEffectiveness(Type attackingType, Type defendingType, BigDecimal multiplier) {

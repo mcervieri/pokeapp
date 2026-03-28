@@ -25,7 +25,7 @@ public class PokemonStat {
     @Column(nullable = false)
     private Integer effort; // EV yield
 
-    protected PokemonStat() {
+    public PokemonStat() {
     }
 
     public PokemonStat(Pokemon pokemon, Stat stat, Integer baseValue, Integer effort) {

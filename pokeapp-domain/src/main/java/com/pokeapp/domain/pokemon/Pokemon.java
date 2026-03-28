@@ -35,7 +35,7 @@ public class Pokemon {
     @Column(name = "sprite_front_url")
     private String spriteFrontUrl;
 
-    protected Pokemon() {
+    public Pokemon() {
     }
 
     public Pokemon(Integer pokeapiId, String name, PokemonSpecies species,

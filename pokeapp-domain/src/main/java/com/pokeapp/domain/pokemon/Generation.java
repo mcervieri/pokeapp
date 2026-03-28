@@ -10,22 +10,30 @@ public class Generation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "pokeapi_id", nullable = false, unique = true)
+    private Integer pokeapiId;
+
     @Column(nullable = false, unique = true, length = 50)
     private String name;
 
     @Column(length = 50)
     private String region;
 
-    protected Generation() {
+    public Generation() {
     }
 
-    public Generation(String name, String region) {
+    public Generation(Integer pokeapiId, String name, String region) {
+        this.pokeapiId = pokeapiId;
         this.name = name;
         this.region = region;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public Integer getPokeapiId() {
+        return pokeapiId;
     }
 
     public String getName() {

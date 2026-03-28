@@ -19,7 +19,7 @@ public class Ability {
     @Column(name = "effect_text", columnDefinition = "TEXT")
     private String effectText;
 
-    protected Ability() {
+    public Ability() {
     }
 
     public Ability(Integer pokeapiId, String name, String effectText) {

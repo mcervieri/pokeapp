@@ -22,7 +22,7 @@ public class Item {
     @Column(name = "sprite_url")
     private String spriteUrl;
 
-    protected Item() {
+    public Item() {
     }
 
     public Item(Integer pokeapiId, String name, String effectText, String spriteUrl) {

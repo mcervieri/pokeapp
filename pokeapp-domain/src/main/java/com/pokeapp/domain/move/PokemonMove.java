@@ -23,7 +23,7 @@ public class PokemonMove {
     @Column(name = "level_learned")
     private Integer levelLearned;
 
-    protected PokemonMove() {
+    public PokemonMove() {
     }
 
     public PokemonMove(Pokemon pokemon, Move move, String learnMethod, Integer levelLearned) {

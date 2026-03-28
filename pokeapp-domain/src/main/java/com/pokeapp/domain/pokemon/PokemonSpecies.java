@@ -32,7 +32,7 @@ public class PokemonSpecies {
     @Column(name = "capture_rate")
     private Integer captureRate;
 
-    protected PokemonSpecies() {
+    public PokemonSpecies() {
     }
 
     public PokemonSpecies(Integer pokeapiId, String name, Generation generation,
