@@ -1,5 +1,7 @@
 package com.pokeapp.domain.pokemon;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,7 +16,7 @@ public class Pokemon {
     private Integer pokeapiId;
 
     @Column(nullable = false, unique = true, length = 100)
-    private String name; // "garchomp", "garchomp-mega"
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "species_id", nullable = false)
@@ -34,6 +36,12 @@ public class Pokemon {
 
     @Column(name = "sprite_front_url")
     private String spriteFrontUrl;
+
+    @OneToMany(mappedBy = "pokemon", fetch = FetchType.LAZY)
+    private List<PokemonType> pokemonTypes;
+
+    @OneToMany(mappedBy = "pokemon", fetch = FetchType.LAZY)
+    private List<PokemonStat> pokemonStats;
 
     public Pokemon() {
     }
@@ -85,5 +93,13 @@ public class Pokemon {
 
     public String getSpriteFrontUrl() {
         return spriteFrontUrl;
+    }
+
+    public List<PokemonType> getPokemonTypes() {
+        return pokemonTypes;
+    }
+
+    public List<PokemonStat> getPokemonStats() {
+        return pokemonStats;
     }
 }

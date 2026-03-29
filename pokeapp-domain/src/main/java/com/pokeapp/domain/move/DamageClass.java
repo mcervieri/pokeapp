@@ -13,7 +13,7 @@ public class DamageClass {
     @Column(nullable = false, unique = true, length = 20)
     private String name;
 
-    protected DamageClass() {
+    public DamageClass() {
     }
 
     public DamageClass(String name) {
