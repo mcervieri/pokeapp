@@ -355,9 +355,9 @@ This project is built as a step-by-step course. Each module explains **what**, *
 | 1.5 | Application configuration (YAML) | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 1.6 | Flyway migrations — all 27 tables | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 2.1–2.4 | JPA entities + repositories | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 3.1–3.6 | Authentication — JWT + Spring Security | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| 4.1–4.4 | CSV data seeder — all Pokémon imported | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| 5.1–5.6 | Pokémon REST controllers + DTOs | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 3.1–3.6 | Authentication — JWT + Spring Security | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 4.1–4.4 | CSV data seeder — all Pokémon imported | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 5.1–5.6 | Pokémon REST controllers + DTOs | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 6.1–6.4 | Competitive team endpoints | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | 7.1–7.4 | Favorites, comments, ratings, Pokédex | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | 8.1–8.4 | Error handling, Swagger, CORS | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
@@ -391,8 +391,8 @@ This project is built as a step-by-step course. Each module explains **what**, *
 - [x] Spring Boot entry point and YAML config
 - [x] Flyway database migrations
 - [x] JPA entities and repositories
-- [ ] JWT authentication (register / login)
-- [ ] Data seeder — import all Pokémon from CSV
+- [x] JWT authentication (register / login)
+- [x] Data seeder — import all Pokémon from CSV
 - [ ] Full REST API
 - [ ] React frontend
 - [ ] Tests
