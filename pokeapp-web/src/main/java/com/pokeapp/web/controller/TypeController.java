@@ -3,8 +3,9 @@ package com.pokeapp.web.controller;
 import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.TypeDto;
 import com.pokeapp.application.dto.TypeMatchupDto;
+import com.pokeapp.application.exception.ResourceNotFoundException;
 import com.pokeapp.application.service.TypeService;
-import com.pokeapp.web.exception.ResourceNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

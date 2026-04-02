@@ -42,6 +42,12 @@ public class Team {
         this.updatedAt = OffsetDateTime.now();
     }
 
+    public void update(String name, String format) {
+        this.name = name;
+        this.format = format;
+        this.updatedAt = OffsetDateTime.now();
+    }
+
     public Integer getId() {
         return id;
     }
@@ -65,4 +71,5 @@ public class Team {
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
+
 }

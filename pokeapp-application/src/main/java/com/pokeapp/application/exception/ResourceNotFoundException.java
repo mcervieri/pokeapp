@@ -1,4 +1,4 @@
-package com.pokeapp.web.exception;
+package com.pokeapp.application.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 
