@@ -3,6 +3,7 @@ package com.pokeapp.web.controller;
 import com.pokeapp.application.dto.NatureDto;
 import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.service.NatureService;
+import com.pokeapp.web.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,15 @@ public class NatureController {
 
     @GetMapping("/{id}")
     public ResponseEntity<NatureDto> getById(@PathVariable Integer id) {
-        return natureService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        NatureDto dto = natureService.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forNature(id));
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<NatureDto> getByName(@PathVariable String name) {
-        return natureService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        NatureDto dto = natureService.findByName(name)
+                .orElseThrow(() -> ResourceNotFoundException.forNature(name));
+        return ResponseEntity.ok(dto);
     }
 }

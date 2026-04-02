@@ -3,6 +3,7 @@ package com.pokeapp.web.controller;
 import com.pokeapp.application.dto.AbilityDto;
 import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.service.AbilityService;
+import com.pokeapp.web.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,15 @@ public class AbilityController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AbilityDto> getById(@PathVariable Integer id) {
-        return abilityService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        AbilityDto dto = abilityService.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forAbility(id));
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<AbilityDto> getByName(@PathVariable String name) {
-        return abilityService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        AbilityDto dto = abilityService.findByName(name)
+                .orElseThrow(() -> ResourceNotFoundException.forAbility(name));
+        return ResponseEntity.ok(dto);
     }
 }

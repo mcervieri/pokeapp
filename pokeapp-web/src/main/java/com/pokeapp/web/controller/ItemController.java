@@ -3,6 +3,7 @@ package com.pokeapp.web.controller;
 import com.pokeapp.application.dto.ItemDto;
 import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.service.ItemService;
+import com.pokeapp.web.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,15 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ItemDto> getById(@PathVariable Integer id) {
-        return itemService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        ItemDto dto = itemService.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forItem(id));
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<ItemDto> getByName(@PathVariable String name) {
-        return itemService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        ItemDto dto = itemService.findByName(name)
+                .orElseThrow(() -> ResourceNotFoundException.forItem(name));
+        return ResponseEntity.ok(dto);
     }
 }

@@ -3,6 +3,7 @@ package com.pokeapp.web.controller;
 import com.pokeapp.application.dto.MoveDto;
 import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.service.MoveService;
+import com.pokeapp.web.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,15 @@ public class MoveController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MoveDto> getById(@PathVariable Integer id) {
-        return moveService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        MoveDto dto = moveService.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forMove(id));
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<MoveDto> getByName(@PathVariable String name) {
-        return moveService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        MoveDto dto = moveService.findByName(name)
+                .orElseThrow(() -> ResourceNotFoundException.forMove(name));
+        return ResponseEntity.ok(dto);
     }
 }

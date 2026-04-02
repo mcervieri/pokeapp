@@ -4,6 +4,7 @@ import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.TypeDto;
 import com.pokeapp.application.dto.TypeMatchupDto;
 import com.pokeapp.application.service.TypeService;
+import com.pokeapp.web.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,9 @@ public class TypeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TypeDto> getById(@PathVariable Integer id) {
-        return typeService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        TypeDto dto = typeService.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forType(id));
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/{id}/matchups")

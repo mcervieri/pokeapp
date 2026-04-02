@@ -3,6 +3,7 @@ package com.pokeapp.web.controller;
 import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.PokemonDto;
 import com.pokeapp.application.service.PokemonService;
+import com.pokeapp.web.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +26,15 @@ public class PokemonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PokemonDto> getById(@PathVariable Integer id) {
-        return pokemonService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        PokemonDto dto = pokemonService.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.forPokemon(id));
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<PokemonDto> getByName(@PathVariable String name) {
-        return pokemonService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        PokemonDto dto = pokemonService.findByName(name)
+                .orElseThrow(() -> ResourceNotFoundException.forPokemon(name));
+        return ResponseEntity.ok(dto);
     }
 }
