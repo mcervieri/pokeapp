@@ -8,11 +8,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,23 +31,12 @@ class PokemonServiceTest {
     private Pokemon buildBulbasaur() {
         Type grass = new Type(1, "grass");
         Stat hp = new Stat(1, "hp");
-
-        // PokemonType and PokemonStat require a Pokemon reference —
-        // use no-arg constructor and set fields via the available constructor path
         Pokemon p = new Pokemon(1, "bulbasaur", null, true, 7, 69, 64, null);
-
         PokemonType pt = new PokemonType(p, grass, 1);
         PokemonStat ps = new PokemonStat(p, hp, 45, 0);
-
-        // We need a Pokemon that already has its collections set.
-        // Since there's no constructor for that, we build via reflection helper below.
         return buildPokemonWithCollections(p, List.of(pt), List.of(ps));
     }
 
-    /**
-     * Uses reflection to set the private collections on Pokemon,
-     * since the constructor doesn't accept them and there are no setters.
-     */
     private Pokemon buildPokemonWithCollections(Pokemon p,
             List<PokemonType> types, List<PokemonStat> stats) {
         try {
@@ -62,15 +55,16 @@ class PokemonServiceTest {
 
     @Test
     void findAll_returnsMappedDtos() {
-        when(pokemonRepository.findAll()).thenReturn(List.of(buildBulbasaur()));
+        when(pokemonRepository.findByFilters(isNull(), isNull(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(buildBulbasaur())));
 
-        List<PokemonDto> result = pokemonService.findAll();
+        var result = pokemonService.findAll(null, null, Pageable.unpaged());
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("bulbasaur");
-        assertThat(result.get(0).types()).containsExactly("grass");
-        assertThat(result.get(0).stats()).hasSize(1);
-        assertThat(result.get(0).stats().get(0).baseValue()).isEqualTo(45);
+        assertThat(result.content()).hasSize(1);
+        assertThat(result.content().get(0).name()).isEqualTo("bulbasaur");
+        assertThat(result.content().get(0).types()).containsExactly("grass");
+        assertThat(result.content().get(0).stats()).hasSize(1);
+        assertThat(result.content().get(0).stats().get(0).baseValue()).isEqualTo(45);
     }
 
     @Test

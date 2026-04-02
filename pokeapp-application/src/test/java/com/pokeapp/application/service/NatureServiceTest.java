@@ -9,10 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,25 +34,27 @@ class NatureServiceTest {
         Stat spAtk = new Stat(2, "special-attack");
         Nature adamant = new Nature(3, "adamant", attack, spAtk);
 
-        when(natureRepository.findAll()).thenReturn(List.of(adamant));
+        when(natureRepository.findBySearch(isNull(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(adamant)));
 
-        List<NatureDto> result = natureService.findAll();
+        var result = natureService.findAll(null, Pageable.unpaged());
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("adamant");
-        assertThat(result.get(0).increasedStatName()).isEqualTo("attack");
-        assertThat(result.get(0).decreasedStatName()).isEqualTo("special-attack");
+        assertThat(result.content()).hasSize(1);
+        assertThat(result.content().get(0).name()).isEqualTo("adamant");
+        assertThat(result.content().get(0).increasedStatName()).isEqualTo("attack");
+        assertThat(result.content().get(0).decreasedStatName()).isEqualTo("special-attack");
     }
 
     @Test
     void findAll_neutralNature_returnsNullStats() {
         Nature hardy = new Nature(1, "hardy", null, null);
 
-        when(natureRepository.findAll()).thenReturn(List.of(hardy));
+        when(natureRepository.findBySearch(isNull(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(hardy)));
 
-        List<NatureDto> result = natureService.findAll();
+        var result = natureService.findAll(null, Pageable.unpaged());
 
-        assertThat(result.get(0).increasedStatName()).isNull();
-        assertThat(result.get(0).decreasedStatName()).isNull();
+        assertThat(result.content().get(0).increasedStatName()).isNull();
+        assertThat(result.content().get(0).decreasedStatName()).isNull();
     }
 }

@@ -1,13 +1,14 @@
 package com.pokeapp.application.service;
 
 import com.pokeapp.application.dto.MoveDto;
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.domain.move.Move;
 import com.pokeapp.application.repository.MoveRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,23 +18,19 @@ public class MoveService {
     private final MoveRepository moveRepository;
 
     @Transactional(readOnly = true)
-    public List<MoveDto> findAll() {
-        return moveRepository.findAll()
-                .stream()
-                .map(this::toDto)
-                .toList();
+    public PagedResponse<MoveDto> findAll(String search, Pageable pageable) {
+        return PagedResponse.from(
+                moveRepository.findBySearch(search, pageable).map(this::toDto));
     }
 
     @Transactional(readOnly = true)
     public Optional<MoveDto> findById(Integer id) {
-        return moveRepository.findById(id)
-                .map(this::toDto);
+        return moveRepository.findById(id).map(this::toDto);
     }
 
     @Transactional(readOnly = true)
     public Optional<MoveDto> findByName(String name) {
-        return moveRepository.findByName(name)
-                .map(this::toDto);
+        return moveRepository.findByName(name).map(this::toDto);
     }
 
     private MoveDto toDto(Move m) {

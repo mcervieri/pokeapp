@@ -1,5 +1,6 @@
 package com.pokeapp.web.controller;
 
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.PokemonDto;
 import com.pokeapp.application.dto.StatValueDto;
 import com.pokeapp.application.security.JwtAuthFilter;
@@ -7,16 +8,18 @@ import com.pokeapp.application.security.JwtService;
 import com.pokeapp.application.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -56,14 +59,36 @@ class PokemonControllerTest {
                 List.of(new StatValueDto("hp", 45)));
     }
 
+    private PagedResponse<PokemonDto> pagedBulbasaur() {
+        return new PagedResponse<>(List.of(bulbasaur()), 0, 20, 1, 1, true);
+    }
+
     @Test
-    void getAll_returnsOkWithList() throws Exception {
-        when(pokemonService.findAll()).thenReturn(List.of(bulbasaur()));
+    void getAll_returnsOkWithPagedContent() throws Exception {
+        when(pokemonService.findAll(isNull(), isNull(), any())).thenReturn(pagedBulbasaur());
 
         mockMvc.perform(get("/api/v1/pokemon"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("bulbasaur"))
-                .andExpect(jsonPath("$[0].types[0]").value("grass"));
+                .andExpect(jsonPath("$.content[0].name").value("bulbasaur"))
+                .andExpect(jsonPath("$.content[0].types[0]").value("grass"));
+    }
+
+    @Test
+    void getAll_withTypeFilter_returnsOk() throws Exception {
+        when(pokemonService.findAll(any(), isNull(), any())).thenReturn(pagedBulbasaur());
+
+        mockMvc.perform(get("/api/v1/pokemon?type=grass"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].name").value("bulbasaur"));
+    }
+
+    @Test
+    void getAll_withSearchFilter_returnsOk() throws Exception {
+        when(pokemonService.findAll(isNull(), any(), any())).thenReturn(pagedBulbasaur());
+
+        mockMvc.perform(get("/api/v1/pokemon?search=bulb"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].name").value("bulbasaur"));
     }
 
     @Test

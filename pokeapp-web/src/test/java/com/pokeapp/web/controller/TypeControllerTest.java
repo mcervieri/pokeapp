@@ -1,5 +1,6 @@
 package com.pokeapp.web.controller;
 
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.TypeDto;
 import com.pokeapp.application.dto.TypeMatchupDto;
 import com.pokeapp.application.security.JwtAuthFilter;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -56,13 +58,17 @@ class TypeControllerTest {
                 List.of(new TypeMatchupDto("grass", new BigDecimal("2.0"))));
     }
 
+    private PagedResponse<TypeDto> pagedFire() {
+        return new PagedResponse<>(List.of(fire()), 0, 20, 1, 1, true);
+    }
+
     @Test
-    void getAll_returnsOkWithList() throws Exception {
-        when(typeService.findAll()).thenReturn(List.of(fire()));
+    void getAll_returnsOkWithPagedContent() throws Exception {
+        when(typeService.findAll(any())).thenReturn(pagedFire());
 
         mockMvc.perform(get("/api/v1/types"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("fire"));
+                .andExpect(jsonPath("$.content[0].name").value("fire"));
     }
 
     @Test
@@ -83,11 +89,11 @@ class TypeControllerTest {
     }
 
     @Test
-    void getByName_whenExists_returnsOk() throws Exception {
-        when(typeService.findByName("fire")).thenReturn(Optional.of(fire()));
+    void getMatchups_returnsOk() throws Exception {
+        when(typeService.getMatchups(10)).thenReturn(fire().damageRelations());
 
-        mockMvc.perform(get("/api/v1/types/name/fire"))
+        mockMvc.perform(get("/api/v1/types/10/matchups"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("fire"));
+                .andExpect(jsonPath("$[0].targetType").value("grass"));
     }
 }

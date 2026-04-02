@@ -1,6 +1,7 @@
 package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.NatureDto;
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.security.JwtAuthFilter;
 import com.pokeapp.application.security.JwtService;
 import com.pokeapp.application.service.*;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,13 +56,17 @@ class NatureControllerTest {
         return new NatureDto(3, "adamant", "attack", "special-attack");
     }
 
+    private PagedResponse<NatureDto> pagedAdamant() {
+        return new PagedResponse<>(List.of(adamant()), 0, 20, 1, 1, true);
+    }
+
     @Test
-    void getAll_returnsOkWithList() throws Exception {
-        when(natureService.findAll()).thenReturn(List.of(adamant()));
+    void getAll_returnsOkWithPagedContent() throws Exception {
+        when(natureService.findAll(isNull(), any())).thenReturn(pagedAdamant());
 
         mockMvc.perform(get("/api/v1/natures"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("adamant"));
+                .andExpect(jsonPath("$.content[0].name").value("adamant"));
     }
 
     @Test

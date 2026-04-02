@@ -14,7 +14,7 @@ public class Nature {
     private Integer pokeapiId;
 
     @Column(nullable = false, unique = true, length = 30)
-    private String name; // "jolly", "timid", "hardy", ...
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "increased_stat_id")

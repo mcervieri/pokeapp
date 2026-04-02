@@ -1,6 +1,7 @@
 package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.MoveDto;
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.security.JwtAuthFilter;
 import com.pokeapp.application.security.JwtService;
 import com.pokeapp.application.service.*;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,13 +56,17 @@ class MoveControllerTest {
         return new MoveDto(53, "flamethrower", "fire", "special", 90, 100, 15);
     }
 
+    private PagedResponse<MoveDto> pagedFlamethrower() {
+        return new PagedResponse<>(List.of(flamethrower()), 0, 20, 1, 1, true);
+    }
+
     @Test
-    void getAll_returnsOkWithList() throws Exception {
-        when(moveService.findAll()).thenReturn(List.of(flamethrower()));
+    void getAll_returnsOkWithPagedContent() throws Exception {
+        when(moveService.findAll(isNull(), any())).thenReturn(pagedFlamethrower());
 
         mockMvc.perform(get("/api/v1/moves"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("flamethrower"));
+                .andExpect(jsonPath("$.content[0].name").value("flamethrower"));
     }
 
     @Test

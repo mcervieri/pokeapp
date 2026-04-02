@@ -1,6 +1,7 @@
 package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.AbilityDto;
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.security.JwtAuthFilter;
 import com.pokeapp.application.security.JwtService;
 import com.pokeapp.application.service.*;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,13 +56,17 @@ class AbilityControllerTest {
         return new AbilityDto(66, "blaze", "Powers up Fire-type moves in a pinch.");
     }
 
+    private PagedResponse<AbilityDto> pagedBlaze() {
+        return new PagedResponse<>(List.of(blaze()), 0, 20, 1, 1, true);
+    }
+
     @Test
-    void getAll_returnsOkWithList() throws Exception {
-        when(abilityService.findAll()).thenReturn(List.of(blaze()));
+    void getAll_returnsOkWithPagedContent() throws Exception {
+        when(abilityService.findAll(isNull(), any())).thenReturn(pagedBlaze());
 
         mockMvc.perform(get("/api/v1/abilities"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("blaze"));
+                .andExpect(jsonPath("$.content[0].name").value("blaze"));
     }
 
     @Test

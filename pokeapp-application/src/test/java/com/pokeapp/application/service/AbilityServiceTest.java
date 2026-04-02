@@ -8,11 +8,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,13 +32,14 @@ class AbilityServiceTest {
     void findAll_returnsMappedDtos() {
         Ability intimidate = new Ability(22, "intimidate", "Lowers opponent's attack on entry.");
 
-        when(abilityRepository.findAll()).thenReturn(List.of(intimidate));
+        when(abilityRepository.findBySearch(isNull(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(intimidate)));
 
-        List<AbilityDto> result = abilityService.findAll();
+        var result = abilityService.findAll(null, Pageable.unpaged());
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("intimidate");
-        assertThat(result.get(0).effectText()).isEqualTo("Lowers opponent's attack on entry.");
+        assertThat(result.content()).hasSize(1);
+        assertThat(result.content().get(0).name()).isEqualTo("intimidate");
+        assertThat(result.content().get(0).effectText()).isEqualTo("Lowers opponent's attack on entry.");
     }
 
     @Test

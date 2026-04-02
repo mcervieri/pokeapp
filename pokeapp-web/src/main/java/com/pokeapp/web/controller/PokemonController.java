@@ -1,12 +1,12 @@
 package com.pokeapp.web.controller;
 
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.PokemonDto;
 import com.pokeapp.application.service.PokemonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/pokemon")
@@ -16,8 +16,11 @@ public class PokemonController {
     private final PokemonService pokemonService;
 
     @GetMapping
-    public ResponseEntity<List<PokemonDto>> getAll() {
-        return ResponseEntity.ok(pokemonService.findAll());
+    public ResponseEntity<PagedResponse<PokemonDto>> getAll(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            Pageable pageable) {
+        return ResponseEntity.ok(pokemonService.findAll(type, search, pageable));
     }
 
     @GetMapping("/{id}")

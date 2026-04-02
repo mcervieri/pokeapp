@@ -10,12 +10,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,17 +39,18 @@ class TypeServiceTest {
         Type water = new Type(11, "water");
         TypeEffectiveness matchup = new TypeEffectiveness(fire, water, new BigDecimal("0.50"));
 
-        when(typeRepository.findAll()).thenReturn(List.of(fire));
+        when(typeRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(fire)));
         when(typeEffectivenessRepository.findByAttackingTypeId(fire.getId()))
                 .thenReturn(List.of(matchup));
 
-        List<TypeDto> result = typeService.findAll();
+        var result = typeService.findAll(Pageable.unpaged());
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("fire");
-        assertThat(result.get(0).damageRelations()).hasSize(1);
-        assertThat(result.get(0).damageRelations().get(0).targetType()).isEqualTo("water");
-        assertThat(result.get(0).damageRelations().get(0).multiplier())
+        assertThat(result.content()).hasSize(1);
+        assertThat(result.content().get(0).name()).isEqualTo("fire");
+        assertThat(result.content().get(0).damageRelations()).hasSize(1);
+        assertThat(result.content().get(0).damageRelations().get(0).targetType()).isEqualTo("water");
+        assertThat(result.content().get(0).damageRelations().get(0).multiplier())
                 .isEqualByComparingTo(new BigDecimal("0.50"));
     }
 

@@ -1,12 +1,12 @@
 package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.MoveDto;
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.service.MoveService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/moves")
@@ -16,8 +16,10 @@ public class MoveController {
     private final MoveService moveService;
 
     @GetMapping
-    public ResponseEntity<List<MoveDto>> getAll() {
-        return ResponseEntity.ok(moveService.findAll());
+    public ResponseEntity<PagedResponse<MoveDto>> getAll(
+            @RequestParam(required = false) String search,
+            Pageable pageable) {
+        return ResponseEntity.ok(moveService.findAll(search, pageable));
     }
 
     @GetMapping("/{id}")

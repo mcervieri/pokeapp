@@ -1,6 +1,7 @@
 package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.ItemDto;
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.security.JwtAuthFilter;
 import com.pokeapp.application.security.JwtService;
 import com.pokeapp.application.service.*;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,13 +56,17 @@ class ItemControllerTest {
         return new ItemDto(17, "potion", "Restores 20 HP.", "https://example.com/potion.png");
     }
 
+    private PagedResponse<ItemDto> pagedPotion() {
+        return new PagedResponse<>(List.of(potion()), 0, 20, 1, 1, true);
+    }
+
     @Test
-    void getAll_returnsOkWithList() throws Exception {
-        when(itemService.findAll()).thenReturn(List.of(potion()));
+    void getAll_returnsOkWithPagedContent() throws Exception {
+        when(itemService.findAll(isNull(), any())).thenReturn(pagedPotion());
 
         mockMvc.perform(get("/api/v1/items"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("potion"));
+                .andExpect(jsonPath("$.content[0].name").value("potion"));
     }
 
     @Test

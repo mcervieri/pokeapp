@@ -10,11 +10,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,28 +38,30 @@ class MoveServiceTest {
 
     @Test
     void findAll_returnsMappedDtos() {
-        when(moveRepository.findAll()).thenReturn(List.of(buildFlamethrower()));
+        when(moveRepository.findBySearch(isNull(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(buildFlamethrower())));
 
-        List<MoveDto> result = moveService.findAll();
+        var result = moveService.findAll(null, Pageable.unpaged());
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("flamethrower");
-        assertThat(result.get(0).type()).isEqualTo("fire");
-        assertThat(result.get(0).damageClass()).isEqualTo("special");
-        assertThat(result.get(0).power()).isEqualTo(90);
+        assertThat(result.content()).hasSize(1);
+        assertThat(result.content().get(0).name()).isEqualTo("flamethrower");
+        assertThat(result.content().get(0).type()).isEqualTo("fire");
+        assertThat(result.content().get(0).damageClass()).isEqualTo("special");
+        assertThat(result.content().get(0).power()).isEqualTo(90);
     }
 
     @Test
     void findAll_nullTypeAndClass_doesNotThrow() {
         Move splash = new Move(1, "splash", null, null, null, null, 40, 0, "Does nothing.");
 
-        when(moveRepository.findAll()).thenReturn(List.of(splash));
+        when(moveRepository.findBySearch(isNull(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(splash)));
 
-        List<MoveDto> result = moveService.findAll();
+        var result = moveService.findAll(null, Pageable.unpaged());
 
-        assertThat(result.get(0).type()).isNull();
-        assertThat(result.get(0).damageClass()).isNull();
-        assertThat(result.get(0).power()).isNull();
+        assertThat(result.content().get(0).type()).isNull();
+        assertThat(result.content().get(0).damageClass()).isNull();
+        assertThat(result.content().get(0).power()).isNull();
     }
 
     @Test

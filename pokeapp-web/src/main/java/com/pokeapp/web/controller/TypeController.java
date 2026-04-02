@@ -1,8 +1,11 @@
 package com.pokeapp.web.controller;
 
+import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.dto.TypeDto;
+import com.pokeapp.application.dto.TypeMatchupDto;
 import com.pokeapp.application.service.TypeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +19,8 @@ public class TypeController {
     private final TypeService typeService;
 
     @GetMapping
-    public ResponseEntity<List<TypeDto>> getAll() {
-        return ResponseEntity.ok(typeService.findAll());
+    public ResponseEntity<PagedResponse<TypeDto>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(typeService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
@@ -27,10 +30,8 @@ public class TypeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<TypeDto> getByName(@PathVariable String name) {
-        return typeService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{id}/matchups")
+    public ResponseEntity<List<TypeMatchupDto>> getMatchups(@PathVariable Integer id) {
+        return ResponseEntity.ok(typeService.getMatchups(id));
     }
 }
