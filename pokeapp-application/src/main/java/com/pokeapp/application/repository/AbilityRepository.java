@@ -15,6 +15,6 @@ public interface AbilityRepository extends JpaRepository<Ability, Integer> {
 
     Optional<Ability> findByName(String name);
 
-    @Query("SELECT a FROM Ability a WHERE :search IS NULL OR LOWER(a.name) LIKE LOWER(CONCAT('%', :search, '%'))")
+    @Query("SELECT a FROM Ability a WHERE CAST(:search AS string) IS NULL OR LOWER(a.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))")
     Page<Ability> findBySearch(@Param("search") String search, Pageable pageable);
 }

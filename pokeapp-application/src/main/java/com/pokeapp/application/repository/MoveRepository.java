@@ -14,6 +14,6 @@ public interface MoveRepository extends JpaRepository<Move, Integer> {
 
     Optional<Move> findByName(String name);
 
-    @Query("SELECT m FROM Move m WHERE :search IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :search, '%'))")
+    @Query("SELECT m FROM Move m WHERE CAST(:search AS string) IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))")
     Page<Move> findBySearch(@Param("search") String search, Pageable pageable);
 }

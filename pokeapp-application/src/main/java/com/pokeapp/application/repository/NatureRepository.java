@@ -20,6 +20,6 @@ public interface NatureRepository extends JpaRepository<Nature, Integer> {
 
     List<Nature> findByDecreasedStatId(Integer statId);
 
-    @Query("SELECT n FROM Nature n WHERE :search IS NULL OR LOWER(n.name) LIKE LOWER(CONCAT('%', :search, '%'))")
+    @Query("SELECT n FROM Nature n WHERE CAST(:search AS string) IS NULL OR LOWER(n.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))")
     Page<Nature> findBySearch(@Param("search") String search, Pageable pageable);
 }

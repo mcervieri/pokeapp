@@ -54,12 +54,12 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/pokemon/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/types/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/moves/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/abilities/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/items/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/natures/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/pokemon/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/types/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/moves/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/abilities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/items/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/natures/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> response
