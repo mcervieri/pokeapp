@@ -2,6 +2,9 @@ package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.user.FavoriteDto;
 import com.pokeapp.application.service.FavoriteService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/favorites")
+@Tag(name = "Favorites", description = "Trainer Pokémon favorites")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;

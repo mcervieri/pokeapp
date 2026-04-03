@@ -2,6 +2,9 @@ package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.user.PokedexEntryDto;
 import com.pokeapp.application.service.PokedexService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/pokedex")
+@Tag(name = "Pokedéx", description = "Trainer Pokédex progress")
 public class PokedexController {
 
     private final PokedexService pokedexService;

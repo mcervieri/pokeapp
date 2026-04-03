@@ -2,6 +2,8 @@ package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.team.*;
 import com.pokeapp.application.service.TeamService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/teams")
+@Tag(name = "Teams", description = "Manage competitive teams and slots")
 public class TeamController {
 
     private final TeamService teamService;

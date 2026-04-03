@@ -5,6 +5,7 @@ import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.exception.ResourceNotFoundException;
 import com.pokeapp.application.service.NatureService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/natures")
+@Tag(name = "Natures", description = "Natures and their stat modifiers")
 @RequiredArgsConstructor
 public class NatureController {
 

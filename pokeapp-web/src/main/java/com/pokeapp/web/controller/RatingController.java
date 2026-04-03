@@ -2,12 +2,16 @@ package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.user.RatingDto;
 import com.pokeapp.application.service.RatingService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
+@Tag(name = "Ratings", description = "Pokémon ratings")
 public class RatingController {
 
     private final RatingService ratingService;

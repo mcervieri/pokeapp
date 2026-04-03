@@ -30,14 +30,17 @@ public class PokemonIntegrationTest {
 
         @BeforeEach
         void obtainToken() throws Exception {
-                MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
+                String unique = String.valueOf(System.currentTimeMillis());
+
+                MvcResult result = mockMvc.perform(post("/api/v1/auth/register")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("""
                                                 {
-                                                  "username": "mcervieri",
-                                                  "password": "Marina1608@"
+                                                  "username": "test_user_%s",
+                                                  "email": "test_%s@pokeapp.test",
+                                                  "password": "Integration@99"
                                                 }
-                                                """))
+                                                """.formatted(unique, unique)))
                                 .andReturn();
 
                 String body = result.getResponse().getContentAsString();

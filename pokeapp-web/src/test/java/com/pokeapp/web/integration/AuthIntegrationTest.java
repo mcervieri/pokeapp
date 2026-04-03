@@ -23,6 +23,10 @@ public class AuthIntegrationTest {
   @Autowired
   private MockMvc mockMvc;
 
+  static final String TEST_USERNAME = "test_integration_user";
+  static final String TEST_PASSWORD = "Integration@99";
+  static final String TEST_EMAIL = "test_integration@pokeapp.test";
+
   @Test
   void unauthenticatedRequest_returnsPublicData() throws Exception {
     mockMvc.perform(get("/api/v1/pokemon"))
@@ -31,16 +35,20 @@ public class AuthIntegrationTest {
   }
 
   @Test
-  void login_withValidCredentials_returnsToken() throws Exception {
-    mockMvc.perform(post("/api/v1/auth/login")
+  void register_withValidData_returnsToken() throws Exception {
+    // Each run uses a unique suffix so re-runs on the same DB don't conflict
+    String unique = String.valueOf(System.currentTimeMillis());
+
+    mockMvc.perform(post("/api/v1/auth/register")
         .contentType(MediaType.APPLICATION_JSON)
         .content("""
             {
-              "username": "mcervieri",
-              "password": "Marina1608@"
+              "username": "test_user_%s",
+              "email": "test_%s@pokeapp.test",
+              "password": "Integration@99"
             }
-            """))
-        .andExpect(status().isOk())
+            """.formatted(unique, unique)))
+        .andExpect(status().isCreated())
         .andExpect(jsonPath("$.token").exists())
         .andExpect(jsonPath("$.token").isNotEmpty());
   }
@@ -51,7 +59,7 @@ public class AuthIntegrationTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content("""
             {
-              "username": "mcervieri",
+              "username": "ghost_user_xyz",
               "password": "wrongpassword"
             }
             """))
@@ -60,18 +68,22 @@ public class AuthIntegrationTest {
 
   @Test
   void authenticatedRequest_withValidToken_returns200() throws Exception {
-    MvcResult loginResult = mockMvc.perform(post("/api/v1/auth/login")
+    // Register a fresh user, then immediately use the returned token
+    String unique = String.valueOf(System.currentTimeMillis());
+
+    MvcResult registerResult = mockMvc.perform(post("/api/v1/auth/register")
         .contentType(MediaType.APPLICATION_JSON)
         .content("""
             {
-              "username": "mcervieri",
-              "password": "Marina1608@"
+              "username": "test_user_%s",
+              "email": "test_%s@pokeapp.test",
+              "password": "Integration@99"
             }
-            """))
-        .andExpect(status().isOk())
+            """.formatted(unique, unique)))
+        .andExpect(status().isCreated())
         .andReturn();
 
-    String body = loginResult.getResponse().getContentAsString();
+    String body = registerResult.getResponse().getContentAsString();
     String token = body.replaceAll(".*\"token\":\\s*\"([^\"]+)\".*", "$1");
 
     mockMvc.perform(get("/api/v1/pokemon")

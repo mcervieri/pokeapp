@@ -5,6 +5,7 @@ import com.pokeapp.application.dto.PagedResponse;
 import com.pokeapp.application.exception.ResourceNotFoundException;
 import com.pokeapp.application.service.MoveService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/moves")
+@Tag(name = "Moves", description = "Move data including power, accuracy and damage class")
 @RequiredArgsConstructor
 public class MoveController {
 

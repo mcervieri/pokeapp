@@ -5,6 +5,7 @@ import com.pokeapp.application.dto.PokemonDto;
 import com.pokeapp.application.exception.ResourceNotFoundException;
 import com.pokeapp.application.service.PokemonService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/pokemon")
+@Tag(name = "Pokémon", description = "Browse Pokémon with stats, types, abilities and moves")
 @RequiredArgsConstructor
 public class PokemonController {
 

@@ -6,6 +6,7 @@ import com.pokeapp.application.dto.TypeMatchupDto;
 import com.pokeapp.application.exception.ResourceNotFoundException;
 import com.pokeapp.application.service.TypeService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/types")
+@Tag(name = "Types", description = "Pokémon types and damage multipliers")
 @RequiredArgsConstructor
 public class TypeController {
 
