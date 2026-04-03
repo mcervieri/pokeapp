@@ -53,4 +53,12 @@ public class ResourceNotFoundException extends RuntimeException {
     public static ResourceNotFoundException forNature(String name) {
         return new ResourceNotFoundException("Nature not found with name: " + name);
     }
+
+    public static ResourceNotFoundException forTrainer(String username) {
+        return new ResourceNotFoundException("Trainer not found with username: " + username);
+    }
+
+    public static ResourceNotFoundException forComment(Integer id) {
+        return new ResourceNotFoundException("Comment not found with id: " + id);
+    }
 }

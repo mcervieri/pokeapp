@@ -358,8 +358,8 @@ This project is built as a step-by-step course. Each module explains **what**, *
 | 3.1–3.6 | Authentication — JWT + Spring Security | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 4.1–4.4 | CSV data seeder — all Pokémon imported | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 5.1–5.6 | Pokémon REST controllers + DTOs | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 6.1–6.4 | Competitive team endpoints | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| 7.1–7.4 | Favorites, comments, ratings, Pokédex | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 6.1–6.4 | Competitive team endpoints | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 7.1–7.4 | Favorites, comments, ratings, Pokédex | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 8.1–8.4 | Error handling, Swagger, CORS | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
 ### Phase 2 — Frontend *(coming after backend is complete)*
@@ -393,13 +393,15 @@ This project is built as a step-by-step course. Each module explains **what**, *
 - [x] JPA entities and repositories
 - [x] JWT authentication (register / login)
 - [x] Data seeder — import all Pokémon from CSV
-- [ ] Full REST API
+- [x] Full REST API
 - [ ] React frontend
 - [ ] Tests
 - [ ] Docker deployment
 - [ ] Cloud hosting
 - [ ] TCG module (cards, sets, attacks, deck builder)
 - [ ] TCG Pocket module (cards, packs, wonder picks, collection tracker)
+- [ ] Damage calculator for VGC
+- [ ] VGC Tournament Data Platform
 
 ---
 

@@ -3,7 +3,6 @@ spring:
     name: pokeapp
   profiles:
     active: dev
-
   jpa:
     hibernate:
       ddl-auto: validate
@@ -13,20 +12,16 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
 server:
   port: 8080
-
 logging:
   level:
     com.pokeapp: INFO
     org.springframework: WARN
     org.hibernate: WARN
-
 app:
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: 86400000
-
   seeder:
     enabled: false
