@@ -2,10 +2,10 @@ package com.pokeapp.web.controller;
 
 import com.pokeapp.application.dto.team.*;
 import com.pokeapp.application.service.TeamService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class TeamController {
 
     @PostMapping
     public ResponseEntity<TeamDetailDto> createTeam(
-            @RequestBody CreateTeamRequest request,
+            @Valid @RequestBody CreateTeamRequest request,
             Principal principal) {
         TeamDetailDto created = teamService.createTeam(request, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -55,7 +55,7 @@ public class TeamController {
     public TeamSlotDto upsertSlot(
             @PathVariable Integer id,
             @PathVariable Integer position,
-            @RequestBody UpsertSlotRequest request,
+            @Valid @RequestBody UpsertSlotRequest request,
             Principal principal) {
         return teamService.upsertSlot(id, position, request, principal.getName());
     }

@@ -70,4 +70,24 @@ public class GlobalExceptionHandler {
                                                 "Invalid username or password",
                                                 request.getRequestURI()));
         }
+
+        @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+        public ResponseEntity<ErrorResponse> handleValidation(
+                        org.springframework.web.bind.MethodArgumentNotValidException ex,
+                        HttpServletRequest request) {
+
+                String message = ex.getBindingResult()
+                                .getFieldErrors()
+                                .stream()
+                                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                                .collect(java.util.stream.Collectors.joining("; "));
+
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(ErrorResponse.of(
+                                                HttpStatus.BAD_REQUEST.value(),
+                                                "Validation Failed",
+                                                message,
+                                                request.getRequestURI()));
+        }
 }

@@ -1,6 +1,10 @@
 package com.pokeapp.web.dto.auth;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record LoginRequest(
-        String username,
-        String password) {
+
+                @NotBlank(message = "Username must not be blank") String username,
+
+                @NotBlank(message = "Password must not be blank") String password) {
 }

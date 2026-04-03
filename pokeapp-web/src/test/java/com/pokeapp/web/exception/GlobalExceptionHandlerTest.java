@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {
@@ -28,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         AbilityController.class,
         ItemController.class,
         MoveController.class,
-        NatureController.class
+        NatureController.class,
+        AuthController.class
 })
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
@@ -85,15 +88,6 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void whenInvalidIdType_returns400WithErrorBody() throws Exception {
-        mockMvc.perform(get("/api/v1/pokemon/notanumber"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.path").value("/api/v1/pokemon/notanumber"));
-    }
-
-    @Test
     void whenAbilityNotFound_returns404WithErrorBody() throws Exception {
         when(abilityService.findById(anyInt())).thenReturn(Optional.empty());
 
@@ -133,5 +127,34 @@ public class GlobalExceptionHandlerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").value("Nature not found with id: 9999"));
+    }
+
+    @Test
+    void whenInvalidIdType_returns400WithErrorBody() throws Exception {
+        mockMvc.perform(get("/api/v1/pokemon/notanumber"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.path").value("/api/v1/pokemon/notanumber"));
+    }
+
+    @Test
+    void whenRegisterRequestInvalid_returns400WithValidationErrors() throws Exception {
+        String badBody = """
+                {
+                    "username": "",
+                    "email": "not-an-email",
+                    "password": "short"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(badBody))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Validation Failed"))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 }

@@ -4,6 +4,7 @@ import com.pokeapp.application.service.AuthService;
 import com.pokeapp.web.dto.auth.AuthResponse;
 import com.pokeapp.web.dto.auth.LoginRequest;
 import com.pokeapp.web.dto.auth.RegisterRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         String token = authService.register(
                 request.username(),
                 request.email(),
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         String token = authService.login(request.username(), request.password());
         return ResponseEntity.ok(new AuthResponse(token, request.username()));
     }
