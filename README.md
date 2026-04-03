@@ -1,16 +1,17 @@
 # PokeApp
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.4-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-Multi--module-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In_Development-orange?style=for-the-badge)
+![Backend](https://img.shields.io/badge/Backend-Complete-brightgreen?style=for-the-badge)
+![Frontend](https://img.shields.io/badge/Frontend-In_Progress-orange?style=for-the-badge)
 
-> A full-stack Pokémon platform built from scratch — own database, own API, own frontend.
-> Built as a learning course covering Java 21, Spring Boot 3, PostgreSQL, and React.
+> A full-stack competitive Pokémon platform built from scratch — own database, own API, own frontend.
+> Built as a structured learning course covering Java 21, Spring Boot 3, PostgreSQL, and React.
 
 ---
 
@@ -25,15 +26,14 @@
 - [API Endpoints](#api-endpoints)
 - [Course Modules](#course-modules)
 - [Roadmap](#roadmap)
-- [Future — TCG Module](#future--tcg-module)
-- [Contributing](#contributing)
+- [Future — TCG Modules](#future--tcg-modules)
 - [License](#license)
 
 ---
 
 ## About the Project
 
-PokeApp is a full-stack Pokémon platform that owns **all its data** — no dependency on external APIs at runtime. The game data (Pokémon, types, moves, abilities, items, natures, evolutions) is imported once from PokéAPI's open-source CSV dataset and stored in our own PostgreSQL database.
+PokeApp is a full-stack Pokémon platform that owns **all its data** — no dependency on external APIs at runtime. Game data (Pokémon, types, moves, abilities, items, natures, evolutions) is imported once from PokéAPI's open-source CSV dataset and stored in our own PostgreSQL database.
 
 On top of that data layer, users can:
 
@@ -43,7 +43,7 @@ On top of that data layer, users can:
 - **Favorite** Pokémon and write comments and ratings
 - Everything tied to a **user account** with JWT authentication
 
-This project is also documented as a **self-paced course** — every decision is explained, nothing is magic.
+This project is also documented as a **self-paced course** — every architectural decision is explained before code is written. Nothing is magic.
 
 ---
 
@@ -52,7 +52,7 @@ This project is also documented as a **self-paced course** — every decision is
 ### Backend
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.x-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.4-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
 ![Spring Security](https://img.shields.io/badge/Spring_Security-6.x-6DB33F?style=flat-square&logo=spring-security&logoColor=white)
 ![Spring Data JPA](https://img.shields.io/badge/Spring_Data_JPA-3.3.x-6DB33F?style=flat-square&logo=spring&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-6.x-59666C?style=flat-square&logo=hibernate&logoColor=white)
@@ -62,7 +62,7 @@ This project is also documented as a **self-paced course** — every decision is
 ![Lombok](https://img.shields.io/badge/Lombok-latest-pink?style=flat-square)
 ![Maven](https://img.shields.io/badge/Maven-3.9.x-C71A36?style=flat-square&logo=apache-maven&logoColor=white)
 
-### Frontend *(coming soon)*
+### Frontend *(in progress)*
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)
@@ -79,7 +79,7 @@ This project is also documented as a **self-paced course** — every decision is
 
 ## Architecture
 
-The backend follows a **multi-module Maven** architecture with clear separation of concerns:
+The backend follows a **Maven multi-module** architecture with strict separation of concerns:
 
 ```
 pokeapp/                          ← Parent POM (coordinator)
@@ -90,56 +90,60 @@ pokeapp/                          ← Parent POM (coordinator)
 ├── pokeapp-application/          ← Business logic layer
 │   ├── Services                  ← All business rules live here
 │   ├── DTOs                      ← Data Transfer Objects (API shapes)
-│   └── JWT utilities             ← Token generation & validation
+│   └── Security utilities        ← JWT generation & validation
 │
 └── pokeapp-web/                  ← HTTP layer
     ├── Controllers               ← REST endpoints
-    ├── Security config           ← Spring Security setup
-    └── Exception handlers        ← Global error handling
+    ├── Security config           ← Spring Security + JWT filter
+    └── Exception handlers        ← Global error handling (@ControllerAdvice)
 ```
 
-**Dependency flow:**
+**Dependency flow (one direction only):**
+
 ```
 pokeapp-web  →  pokeapp-application  →  pokeapp-domain  →  PostgreSQL
 ```
 
-Each module only knows about the module below it. `pokeapp-domain` knows nothing about HTTP or security — it's pure data. This makes the codebase easier to navigate, test, and change.
+Each module only knows about the module below it. `pokeapp-domain` knows nothing about HTTP or security — it's pure data. This makes the codebase easier to navigate, test, and extend.
 
 ---
 
 ## Database Schema
 
-The database has **27 tables** split into two groups:
+27 tables across two groups, managed by Flyway migrations (V1–V6).
 
 ### Game Data (14 tables)
+
 Seeded once from PokéAPI's open-source CSV dataset. Never modified by users.
 
 | Table | Description |
 |---|---|
 | `generation` | The 9 Pokémon game generations |
 | `type` | The 18 Pokémon types |
-| `type_efficacy` | Type matchup chart (damage multipliers) |
+| `type_efficacy` | Type matchup chart with damage multipliers |
 | `stat` | HP, Attack, Defense, Sp. Atk, Sp. Def, Speed |
-| `ability` | All Pokémon abilities with effects |
-| `move` | All moves with power, PP, accuracy, type |
+| `ability` | All Pokémon abilities with effect text |
+| `move` | All moves — power, PP, accuracy, type, damage class |
 | `nature` | 25 natures with stat modifiers |
-| `item` | Held items and their effects |
-| `evolution_chain` | Family tree groupings |
+| `item` | Held items with effect text and sprite URLs |
+| `evolution_chain` | Evolution family tree groupings |
 | `evolution` | Individual evolution steps with conditions |
 | `pokemon_species` | Species-level data (legendary, mythical, etc.) |
-| `pokemon` | Individual Pokémon variants with sprites |
+| `pokemon` | Individual Pokémon variants with sprite URLs |
 | `pokemon_type` | Many-to-many: Pokémon ↔ types |
 | `pokemon_stat` | Base stats per Pokémon |
-| `pokemon_ability` | Available abilities per Pokémon |
+| `pokemon_ability` | Available abilities per Pokémon (including hidden) |
+| `pokemon_move` | Learnable moves per Pokémon per learn method |
 
 ### User Data (13 tables)
-Created and modified by users.
+
+Created and modified at runtime by registered users.
 
 | Table | Description |
 |---|---|
-| `users` | Accounts with hashed passwords |
+| `users` | Accounts with BCrypt-hashed passwords |
 | `team` | Competitive teams (name, format, visibility) |
-| `team_slot` | 6 slots per team with Pokémon, ability, nature, item |
+| `team_slot` | Up to 6 Pokémon slots per team |
 | `team_slot_move` | Up to 4 moves per slot |
 | `team_slot_ev` | EV values per stat per slot |
 | `team_slot_iv` | IV values per stat per slot |
@@ -162,7 +166,7 @@ Created and modified by users.
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/pokeapp.git
+git clone https://github.com/mcervieri/pokeapp.git
 cd pokeapp
 ```
 
@@ -172,13 +176,15 @@ cd pokeapp
 docker compose up -d
 ```
 
-This starts a PostgreSQL 16 container with:
+This starts PostgreSQL 16 with:
+
 - **Host:** `localhost:5432`
 - **Database:** `pokeapp_db`
 - **User:** `pokeapp_user`
 - **Password:** `pokeapp_pass`
 
 Verify it's running:
+
 ```bash
 docker ps
 docker exec -it pokeapp-postgres pg_isready -U pokeapp_user -d pokeapp_db
@@ -186,7 +192,7 @@ docker exec -it pokeapp-postgres pg_isready -U pokeapp_user -d pokeapp_db
 
 ### 3. Configure the application
 
-Create `pokeapp-web/src/main/resources/application-dev.yml`:
+Create `pokeapp-web/src/main/resources/application-dev.yml` (this file is `.gitignore`d):
 
 ```yaml
 spring:
@@ -200,11 +206,19 @@ spring:
       minimum-idle: 2
       connection-timeout: 30000
   jpa:
-    show-sql: true
+    show-sql: false
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+
+app:
+  jwt:
+    secret: your-secret-key-here
+    expiration: 86400000
+
+seed:
+  enabled: true
 ```
 
 ### 4. Build and run
@@ -214,17 +228,14 @@ spring:
 mvn compile
 
 # Run the application
-mvn spring-boot:run -pl pokeapp-web
+mvn spring-boot:run -pl pokeapp-web -am
 ```
 
 The API will be available at `http://localhost:8080`.
 
-### 5. Verify
+### 5. Seed the database
 
-```bash
-curl http://localhost:8080/api/health
-# → { "status": "UP" }
-```
+On first run with `seed.enabled=true`, the `DataSeederService` will import all Pokémon data from the bundled CSV files. This runs once and is idempotent — if data already exists, seeding is skipped.
 
 ---
 
@@ -233,349 +244,260 @@ curl http://localhost:8080/api/health
 ```
 pokeapp/
 ├── docker-compose.yml
-├── pom.xml                                          ← Parent POM
+├── pom.xml                                           ← Parent POM
 │
 ├── pokeapp-domain/
 │   ├── pom.xml
-│   └── src/main/java/com/pokeapp/domain/
-│       ├── entity/                                  ← JPA entities
-│       │   ├── pokemon/
-│       │   │   ├── Pokemon.java
-│       │   │   ├── PokemonSpecies.java
-│       │   │   ├── PokemonType.java
-│       │   │   └── PokemonStat.java
-│       │   ├── game/
-│       │   │   ├── Generation.java
-│       │   │   ├── Type.java
-│       │   │   ├── Move.java
+│   └── src/
+│       ├── main/java/com/pokeapp/domain/
+│       │   ├── entity/                               ← 21 JPA entities
 │       │   │   ├── Ability.java
+│       │   │   ├── DamageClass.java
+│       │   │   ├── Evolution.java
+│       │   │   ├── EvolutionChain.java
+│       │   │   ├── Favorite.java
+│       │   │   ├── Generation.java
+│       │   │   ├── Item.java
+│       │   │   ├── Move.java
 │       │   │   ├── Nature.java
-│       │   │   └── Item.java
-│       │   └── user/
-│       │       ├── User.java
-│       │       ├── Team.java
-│       │       ├── TeamSlot.java
-│       │       ├── Favorite.java
-│       │       ├── PokemonComment.java
-│       │       ├── PokemonRating.java
-│       │       └── PokedexProgress.java
-│       └── repository/                              ← Spring Data repositories
+│       │   │   ├── PokedexProgress.java
+│       │   │   ├── Pokemon.java
+│       │   │   ├── PokemonAbility.java
+│       │   │   ├── PokemonComment.java
+│       │   │   ├── PokemonMove.java
+│       │   │   ├── PokemonRating.java
+│       │   │   ├── PokemonSpecies.java
+│       │   │   ├── PokemonStat.java
+│       │   │   ├── PokemonType.java
+│       │   │   ├── Stat.java
+│       │   │   ├── Team.java
+│       │   │   ├── TeamSlot.java
+│       │   │   ├── Type.java
+│       │   │   ├── TypeEfficacy.java
+│       │   │   └── User.java
+│       │   └── repository/                           ← Spring Data JPA repositories
+│       └── test/                                     ← Repository integration tests
 │
 ├── pokeapp-application/
 │   ├── pom.xml
-│   └── src/main/java/com/pokeapp/application/
-│       ├── service/                                 ← Business logic
-│       │   ├── AuthService.java
-│       │   ├── PokemonService.java
-│       │   ├── TeamService.java
-│       │   └── UserService.java
-│       ├── dto/                                     ← Data Transfer Objects
-│       └── security/                                ← JWT utilities
+│   └── src/
+│       ├── main/java/com/pokeapp/application/
+│       │   ├── dto/                                  ← 8 DTO records
+│       │   │   ├── AbilityDto.java
+│       │   │   ├── ItemDto.java
+│       │   │   ├── MoveDto.java
+│       │   │   ├── NatureDto.java
+│       │   │   ├── PokemonDetailDto.java
+│       │   │   ├── PokemonSummaryDto.java
+│       │   │   ├── TypeDto.java
+│       │   │   └── UserDto.java
+│       │   ├── service/                              ← 6 service classes
+│       │   │   ├── AbilityService.java
+│       │   │   ├── AuthService.java
+│       │   │   ├── ItemService.java
+│       │   │   ├── MoveService.java
+│       │   │   ├── NatureService.java
+│       │   │   ├── PokemonService.java
+│       │   │   └── TypeService.java
+│       │   └── security/                             ← JWT utilities
+│       │       ├── JwtService.java
+│       │       └── UserDetailsServiceImpl.java
+│       └── test/                                     ← Service unit tests
 │
 └── pokeapp-web/
     ├── pom.xml
-    └── src/main/
-        ├── java/com/pokeapp/web/
-        │   ├── PokeAppApplication.java              ← Entry point
-        │   ├── controller/                          ← REST controllers
-        │   │   ├── AuthController.java
-        │   │   ├── PokemonController.java
-        │   │   └── TeamController.java
-        │   ├── config/                              ← Spring Security config
-        │   └── exception/                           ← Global error handling
-        └── resources/
-            ├── application.yml
-            ├── application-dev.yml                  ← Git ignored
-            └── db/migration/                        ← Flyway SQL files
-                ├── V1__create_game_tables.sql
-                └── V2__create_user_tables.sql
+    └── src/
+        ├── main/
+        │   ├── java/com/pokeapp/web/
+        │   │   ├── PokeAppApplication.java            ← Entry point
+        │   │   ├── controller/                        ← 6 REST controllers
+        │   │   │   ├── AbilityController.java
+        │   │   │   ├── AuthController.java
+        │   │   │   ├── ItemController.java
+        │   │   │   ├── MoveController.java
+        │   │   │   ├── NatureController.java
+        │   │   │   ├── PokemonController.java
+        │   │   │   └── TypeController.java
+        │   │   ├── config/
+        │   │   │   └── SecurityConfig.java
+        │   │   └── filter/
+        │   │       └── JwtAuthFilter.java
+        │   └── resources/
+        │       ├── application.yml
+        │       ├── application-dev.yml                ← Git-ignored
+        │       └── db/migration/                      ← Flyway SQL (V1–V6)
+        │           ├── V1__create_generation_type.sql
+        │           ├── V2__create_pokemon_tables.sql
+        │           ├── V3__create_move_ability.sql
+        │           ├── V4__create_item_nature.sql
+        │           ├── V5__create_user_tables.sql
+        │           └── V6__create_team_tables.sql
+        └── test/                                      ← Controller tests (@WebMvcTest)
+            └── PokemonControllerTest.java
 ```
 
 ---
 
 ## API Endpoints
 
-### Authentication
+### Authentication (public)
+
 ```
-POST   /api/auth/register        Register a new user
-POST   /api/auth/login           Login and receive JWT token
-GET    /api/auth/me              Get current user profile (protected)
+POST  /api/auth/register    Register a new user
+POST  /api/auth/login       Login and receive a JWT token
+GET   /api/auth/me          Get current user profile  [protected]
 ```
 
-### Pokédex
+### Pokédex (public)
+
 ```
-GET    /api/pokemon              List all Pokémon (paginated, filterable)
-GET    /api/pokemon/{id}         Get full Pokémon detail
-GET    /api/pokemon/{id}/evolutions  Get evolution chain
-GET    /api/types                List all types
-GET    /api/types/{id}           Get type with damage relations
-GET    /api/moves                List all moves
-GET    /api/moves/{id}           Get move detail
-GET    /api/abilities/{id}       Get ability detail
-GET    /api/generations          List all generations
+GET   /api/pokemon              List all Pokémon (paginated, filterable)
+GET   /api/pokemon/{id}         Get full Pokémon detail
+GET   /api/types                List all types
+GET   /api/types/{id}           Get type detail
+GET   /api/moves                List all moves (paginated)
+GET   /api/moves/{id}           Get move detail
+GET   /api/abilities            List all abilities
+GET   /api/abilities/{id}       Get ability detail
+GET   /api/natures              List all natures
+GET   /api/items                List all items
+GET   /api/items/{id}           Get item detail
 ```
 
-### Competitive Teams
+### Competitive Teams (protected)
+
 ```
-GET    /api/teams                Get current user's teams (protected)
-POST   /api/teams                Create a new team (protected)
-GET    /api/teams/{id}           Get team detail
-PUT    /api/teams/{id}           Update team (protected, owner only)
-DELETE /api/teams/{id}           Delete team (protected, owner only)
-POST   /api/teams/{id}/slots     Add Pokémon to a slot (protected)
-PUT    /api/teams/{id}/slots/{slot}  Update slot (protected)
+GET    /api/teams                      Get current user's teams
+POST   /api/teams                      Create a new team
+GET    /api/teams/{id}                 Get team detail
+PUT    /api/teams/{id}                 Update team (owner only)
+DELETE /api/teams/{id}                 Delete team (owner only)
+POST   /api/teams/{id}/slots           Add Pokémon to a slot
+PUT    /api/teams/{id}/slots/{slot}    Update a slot
+DELETE /api/teams/{id}/slots/{slot}    Remove a slot
 ```
 
-### User Features
+### User Features (protected)
+
 ```
-GET    /api/users/me/favorites          Get favorites (protected)
-POST   /api/users/me/favorites/{id}     Add favorite (protected)
-DELETE /api/users/me/favorites/{id}     Remove favorite (protected)
-GET    /api/users/me/pokedex            Get Pokédex progress (protected)
-PUT    /api/users/me/pokedex/{id}       Update seen/caught (protected)
-POST   /api/pokemon/{id}/comments       Post a comment (protected)
-POST   /api/pokemon/{id}/ratings        Rate a Pokémon (protected)
+GET    /api/users/me/favorites          List favorites
+POST   /api/users/me/favorites/{id}     Add favorite
+DELETE /api/users/me/favorites/{id}     Remove favorite
+
+GET    /api/users/me/pokedex            Get Pokédex progress
+PUT    /api/users/me/pokedex/{id}       Mark seen / caught
+
+POST   /api/pokemon/{id}/comments       Post a comment
+POST   /api/pokemon/{id}/ratings        Rate a Pokémon (1–5)
 ```
 
-> **Authentication:** Protected routes require `Authorization: Bearer <token>` header.
+> **Authentication:** All protected routes require `Authorization: Bearer <token>` in the request header.
 
 ---
 
-## Modules
+## Course Modules
 
-This project is built as a step-by-step course. Each module explains **what**, **why**, and **how**.
+This project is built as a self-paced course. Each lesson follows a **what → why → how → verify** format.
 
-### Phase 1 — Backend
+### Phase 1 — Backend (Complete)
 
 | Module | Topic | Status |
 |---|---|---|
-| 1.1–1.2 | Maven multi-module structure | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 1.3 | Docker + PostgreSQL setup | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 1.4 | Spring Boot entry point | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 1.5 | Application configuration (YAML) | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 1.6 | Flyway migrations — all 27 tables | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 2.1–2.4 | JPA entities + repositories | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 3.1–3.6 | Authentication — JWT + Spring Security | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 4.1–4.4 | CSV data seeder — all Pokémon imported | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 5.1–5.6 | Pokémon REST controllers + DTOs | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 6.1–6.4 | Competitive team endpoints | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 7.1–7.4 | Favorites, comments, ratings, Pokédex | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 8.1–8.4 | Error handling, Swagger, CORS | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| 1 | Maven multi-module structure | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 2 | Docker + PostgreSQL setup | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 3 | Flyway migrations — 27 tables, V1–V6 | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 4 | JPA entities — all 21 entities + composite keys | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 5 | Spring Data repositories | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 6 | JWT authentication — Spring Security 6, filter chain | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 7 | Data seeder — 15 CSV files, 16 tables, FK-safe order | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 8 | REST API — DTOs, services, 6 controllers, pagination, global exception handling | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 
-### Phase 2 — Frontend *(coming after backend is complete)*
+### 🔄 Phase 2 — Frontend (In Progress)
 
 | Module | Topic | Status |
 |---|---|---|
 | F1 | Vite + React setup, routing | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F2 | Auth pages — register, login | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F3 | Pokédex — list, filters, detail | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F2 | Auth pages — register, login, JWT storage | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F3 | Pokédex — list, filters, detail page | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | F4 | Team builder UI | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F5 | User profile — favorites, progress | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F6 | Comments, ratings, social | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F7 | Polish — responsive, loading, errors | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F5 | User profile — favorites, Pokédex progress | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F6 | Comments, ratings, social features | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F7 | Polish — responsive design, loading states, error handling | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
-### Phase 3 — Extras *(optional)*
+### 🔮 Phase 3 — Extras (Planned)
 
 | Module | Topic | Status |
 |---|---|---|
-| E1 | Unit + integration tests (JUnit + Mockito) | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| E2 | Docker — containerize the app | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| E3 | Deploy to cloud (Railway / Render) | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E1 | Docker — containerize the full application | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E2 | Cloud deployment (Railway / Render) | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E3 | TCG module | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E4 | TCG Pocket module | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
 ---
 
 ## Roadmap
 
-- [x] Project structure and Maven setup
-- [x] Docker + PostgreSQL configuration
-- [x] Spring Boot entry point and YAML config
-- [x] Flyway database migrations
+- [x] Maven multi-module structure
+- [x] Docker + PostgreSQL
+- [x] Flyway database migrations (27 tables)
 - [x] JPA entities and repositories
-- [x] JWT authentication (register / login)
-- [x] Data seeder — import all Pokémon from CSV
-- [x] Full REST API
+- [x] JWT authentication (Spring Security 6)
+- [x] Data seeder — all Pokémon imported from CSV
+- [x] Full REST API — DTOs, services, controllers, pagination, global exception handling
 - [ ] React frontend
-- [ ] Tests
-- [ ] Docker deployment
+- [ ] Docker containerization
 - [ ] Cloud hosting
-- [ ] TCG module (cards, sets, attacks, deck builder)
-- [ ] TCG Pocket module (cards, packs, wonder picks, collection tracker)
-- [ ] Damage calculator for VGC
-- [ ] VGC Tournament Data Platform
+- [ ] TCG module (physical card game + deck builder)
+- [ ] TCG Pocket module (digital cards + collection tracker)
+- [ ] VGC Damage calculator
+- [ ] VGC Tournaments results and stats
 
 ---
 
-## Future — TCG & TCG Pocket Modules
+## Future — TCG Modules
 
 ![Planned](https://img.shields.io/badge/Status-Planned-blueviolet?style=for-the-badge)
-![No External API](https://img.shields.io/badge/Data-100%25_Own_Database-2ea44f?style=for-the-badge)
-![TCG](https://img.shields.io/badge/Module-pokeapp--tcg-EF5350?style=for-the-badge)
-![TCG Pocket](https://img.shields.io/badge/Module-pokeapp--tcg--pocket-FF9800?style=for-the-badge)
+![Self-contained](https://img.shields.io/badge/Data-100%25_Own_Database-2ea44f?style=for-the-badge)
 
-Just like the main game module, **both TCG modules will own their data entirely** — no external API dependencies at runtime. Card data will be researched, structured, and seeded directly into our own PostgreSQL database from open community datasets and official sources.
+Just like the main game module, **both TCG modules own their data entirely** — no external API at runtime. Card data will be seeded directly from open community datasets into our own PostgreSQL database.
 
-This makes PokeApp one of the most complete self-contained Pokémon platforms ever built.
-
-### Why two separate modules?
+### Why two modules?
 
 TCG and TCG Pocket are fundamentally different games:
 
-| | TCG (Physical) | TCG Pocket |
+| | TCG (Physical) | TCG Pocket (Digital) |
 |---|---|---|
 | Deck size | 60 cards | 20 cards |
-| Energy system | Energy cards attached | Energize 1 per turn, no energy cards |
-| Formats | Standard, Expanded, Unlimited | Mythical Island, etc. |
+| Energy | Energy cards attached | 1 energy per turn, no energy cards |
 | Card subtypes | Basic, Stage 1, Stage 2, EX, GX, V, VMAX, VSTAR... | Basic, Stage 1, Stage 2, ex |
-| Retreating | Energy cost | No retreat cost |
-| Card source | Physical sets since 1996 | Digital-only packs since 2024 |
+| Retreat | Energy cost | No retreat cost |
+| Card source | Physical sets since 1996 | Digital packs since 2024 |
 | User feature | Deck builder | Collection tracker + Wonder Pick |
 
-They share the concept of a "card" and "set" but the mechanics, data shape, and user features are different enough to warrant separate modules.
+### `pokeapp-tcg` — Physical Card Game
 
----
+Covers every expansion from Base Set (1996) to the latest Scarlet & Violet sets, with a full 60-card deck builder and legality validation.
 
-### Module: `pokeapp-tcg` — Trading Card Game
+**Planned tables:** `tcg_series`, `tcg_set`, `tcg_card`, `tcg_attack`, `tcg_ability`, `tcg_card_weakness`, `tcg_card_resistance`, `tcg_card_legality`, `tcg_deck`, `tcg_deck_card`
 
-The classic physical card game, covering every expansion from Base Set (1996) to the latest Scarlet & Violet sets.
+### `pokeapp-tcg-pocket` — Digital Card Game
 
-#### Module structure
+Covers expansions, packs (Charizard, Mewtwo, Pikachu...), Wonder Pick, and a 20-card deck builder with collection tracking.
 
-```
-pokeapp-tcg/
-├── entity/
-│   ├── TcgSeries.java          ← Series grouping (Base, XY, Sun & Moon, Sword & Shield...)
-│   ├── TcgSet.java             ← Individual expansion (Base Set, Jungle, Paradox Rift...)
-│   ├── TcgCard.java            ← Every card: Pokémon, Trainer, Energy
-│   ├── TcgAttack.java          ← Attacks with energy cost, damage, effect
-│   ├── TcgAbility.java         ← Card abilities (Poké-Power, Poké-Body, Ability)
-│   ├── TcgCardWeakness.java    ← Per-card weakness
-│   ├── TcgCardResistance.java  ← Per-card resistance
-│   ├── TcgCardLegality.java    ← Standard / Expanded / Unlimited legality
-│   ├── TcgDeck.java            ← User-created 60-card deck
-│   └── TcgDeckCard.java        ← Card + quantity in a deck
-├── repository/
-├── service/
-└── controller/
-```
+**Planned tables:** `pocket_expansion`, `pocket_pack`, `pocket_card`, `pocket_attack`, `pocket_ability`, `pocket_card_weakness`, `pocket_card_pack`, `user_pocket_collection`, `user_wonder_pick`, `pocket_deck`, `pocket_deck_card`
 
-#### Planned database tables (TCG)
-
-| Table | Description |
-|---|---|
-| `tcg_series` | Series groupings (Base, XY, Sun & Moon, Sword & Shield, Scarlet & Violet) |
-| `tcg_set` | Individual expansions with symbol, release date, total cards |
-| `tcg_card` | Cards with name, HP, type, subtype, rarity, artist, card number, image |
-| `tcg_attack` | Attacks per card — energy cost, damage, effect text |
-| `tcg_ability` | Card abilities — Poké-Power, Poké-Body, Ability |
-| `tcg_card_weakness` | Per-card weakness (type + multiplier e.g. ×2) |
-| `tcg_card_resistance` | Per-card resistance (type + modifier e.g. −30) |
-| `tcg_card_legality` | Standard / Expanded / Unlimited legality per card |
-| `tcg_deck` | User-created 60-card decks |
-| `tcg_deck_card` | Cards in a deck with quantity (max 4 per card) |
-
-#### Planned TCG endpoints
-
-```
-GET    /api/tcg/series                    List all series
-GET    /api/tcg/sets                      List all sets (filterable by series)
-GET    /api/tcg/sets/{id}                 Set detail
-GET    /api/tcg/sets/{id}/cards           All cards in a set
-GET    /api/tcg/cards                     List cards (filter: set, type, rarity, name, legality)
-GET    /api/tcg/cards/{id}               Full card detail with attacks, abilities, legality
-GET    /api/tcg/cards/{id}/variants      Alternate art / promo variants of a card
-
-POST   /api/tcg/decks                    Create a deck (protected)
-GET    /api/tcg/decks                    List user's decks (protected)
-GET    /api/tcg/decks/{id}              Deck detail with all cards
-PUT    /api/tcg/decks/{id}              Update deck (protected, owner only)
-DELETE /api/tcg/decks/{id}             Delete deck (protected, owner only)
-GET    /api/tcg/decks/{id}/validate     Check deck legality for a format (protected)
-```
-
----
-
-### Module: `pokeapp-tcg-pocket` — TCG Pocket
-
-The digital-only mobile card game released in 2024, with its own unique mechanics, pack system, and Wonder Pick feature.
-
-#### Module structure
-
-```
-pokeapp-tcg-pocket/
-├── entity/
-│   ├── PocketExpansion.java        ← Genetic Apex, Mythical Island, Triumphant Light...
-│   ├── PocketPack.java             ← Charizard pack, Mewtwo pack, Pikachu pack...
-│   ├── PocketCard.java             ← Cards with pocket-specific mechanics
-│   ├── PocketAttack.java           ← Attacks with energize cost (no energy cards)
-│   ├── PocketAbility.java          ← Card abilities
-│   ├── PocketCardWeakness.java     ← Per-card weakness
-│   ├── UserCollection.java         ← Cards owned by user + quantity
-│   ├── UserWonderPick.java         ← Wonder Pick history
-│   └── PocketDeck.java             ← User-created 20-card deck
-├── repository/
-├── service/
-└── controller/
-```
-
-#### Planned database tables (TCG Pocket)
-
-| Table | Description |
-|---|---|
-| `pocket_expansion` | Expansions (Genetic Apex, Mythical Island, Triumphant Light...) |
-| `pocket_pack` | Packs within an expansion (Charizard, Mewtwo, Pikachu pack...) |
-| `pocket_card` | Cards with name, HP, type, subtype, rarity, image, pack points cost |
-| `pocket_attack` | Attacks with energize cost, damage, effect (no energy cards) |
-| `pocket_ability` | Card abilities |
-| `pocket_card_weakness` | Per-card weakness |
-| `pocket_card_pack` | Which packs a card appears in and at what rarity |
-| `user_pocket_collection` | Cards owned by a user + quantity (up to 2 per card) |
-| `user_wonder_pick` | Wonder Pick stamps and history per user |
-| `pocket_deck` | User-created 20-card decks |
-| `pocket_deck_card` | Cards in a deck with quantity (max 2 per card) |
-
-#### Planned TCG Pocket endpoints
-
-```
-GET    /api/pocket/expansions                  List all expansions
-GET    /api/pocket/expansions/{id}             Expansion detail
-GET    /api/pocket/expansions/{id}/cards       All cards in an expansion
-GET    /api/pocket/packs                       List all packs
-GET    /api/pocket/packs/{id}/cards            Cards available in a pack by rarity
-GET    /api/pocket/cards                       List cards (filter: expansion, type, rarity, name)
-GET    /api/pocket/cards/{id}                  Full card detail
-
-GET    /api/pocket/collection                  Get user's collection (protected)
-PUT    /api/pocket/collection/{cardId}         Update card quantity in collection (protected)
-GET    /api/pocket/collection/missing          Cards not yet in collection (protected)
-GET    /api/pocket/collection/tradeable        Cards available for Wonder Pick (protected)
-
-POST   /api/pocket/decks                       Create a 20-card deck (protected)
-GET    /api/pocket/decks                       List user's decks (protected)
-GET    /api/pocket/decks/{id}                  Deck detail
-PUT    /api/pocket/decks/{id}                  Update deck (protected, owner only)
-DELETE /api/pocket/decks/{id}                  Delete deck (protected, owner only)
-```
-
----
-
-### Full future module architecture
+### Future architecture
 
 ```
 pokeapp/
-├── pokeapp-domain/          ← Main game data (current)
-├── pokeapp-application/     ← Main game logic (current)
-├── pokeapp-web/             ← HTTP layer — shared entry point (current)
-├── pokeapp-tcg/             ← TCG physical card game (planned)
-└── pokeapp-tcg-pocket/      ← TCG Pocket digital game (planned)
+├── pokeapp-domain/          ← Main game data (complete)
+├── pokeapp-application/     ← Main game logic (complete)
+├── pokeapp-web/             ← Shared HTTP entry point (complete)
+├── pokeapp-tcg/             ← Physical TCG (planned)
+└── pokeapp-tcg-pocket/      ← Digital TCG Pocket (planned)
 ```
 
-All modules share the same PostgreSQL database and the same `pokeapp-web` entry point. The only cross-module reference is `pokemon_species` — a card depicts a species from the main game.
-
----
-
-## Contributing
-
-This is a personal learning project, but feedback and suggestions are welcome! Feel free to open an issue or reach out.
+All modules share the same PostgreSQL database and the same `pokeapp-web` entry point.
 
 ---
 
