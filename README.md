@@ -10,7 +10,7 @@
 ![Backend](https://img.shields.io/badge/Backend-Complete-brightgreen?style=for-the-badge)
 ![Frontend](https://img.shields.io/badge/Frontend-In_Progress-orange?style=for-the-badge)
 
-> A full-stack competitive Pokémon platform built from scratch — own database, own API, own frontend.
+> A full-stack competitive Pokémon platform built from scratch - own database, own API, own frontend.
 > Built as a structured learning course covering Java 21, Spring Boot 3, PostgreSQL, and React.
 
 ---
@@ -26,14 +26,14 @@
 - [API Endpoints](#api-endpoints)
 - [Course Modules](#course-modules)
 - [Roadmap](#roadmap)
-- [Future — TCG Modules](#future--tcg-modules)
+- [Future - TCG Modules](#future--tcg-modules)
 - [License](#license)
 
 ---
 
 ## About the Project
 
-PokeApp is a full-stack Pokémon platform that owns **all its data** — no dependency on external APIs at runtime. Game data (Pokémon, types, moves, abilities, items, natures, evolutions) is imported once from PokéAPI's open-source CSV dataset and stored in our own PostgreSQL database.
+PokeApp is a full-stack Pokémon platform that owns **all its data** - no dependency on external APIs at runtime. Game data (Pokémon, types, moves, abilities, items, natures, evolutions) is imported once from PokéAPI's open-source CSV dataset and stored in our own PostgreSQL database.
 
 On top of that data layer, users can:
 
@@ -42,8 +42,6 @@ On top of that data layer, users can:
 - Track their **Pokédex progress** (seen / caught per Pokémon)
 - **Favorite** Pokémon and write comments and ratings
 - Everything tied to a **user account** with JWT authentication
-
-This project is also documented as a **self-paced course** — every architectural decision is explained before code is written. Nothing is magic.
 
 ---
 
@@ -110,7 +108,7 @@ Each module only knows about the module below it. `pokeapp-domain` knows nothing
 
 ## Database Schema
 
-27 tables across two groups, managed by Flyway migrations (V1–V6).
+27 tables across two groups, managed by Flyway migrations (V1-V6).
 
 ### Game Data (14 tables)
 
@@ -399,36 +397,36 @@ POST   /api/pokemon/{id}/ratings        Rate a Pokémon (1–5)
 
 This project is built as a self-paced course. Each lesson follows a **what → why → how → verify** format.
 
-### Phase 1 — Backend (Complete)
+### Phase 1 - Backend (Complete)
 
 | Module | Topic | Status |
 |---|---|---|
 | 1 | Maven multi-module structure | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 2 | Docker + PostgreSQL setup | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 3 | Flyway migrations — 27 tables, V1–V6 | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 4 | JPA entities — all 21 entities + composite keys | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 3 | Flyway migrations - 27 tables, V1-V6 | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 4 | JPA entities - all 21 entities + composite keys | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 | 5 | Spring Data repositories | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 6 | JWT authentication — Spring Security 6, filter chain | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 7 | Data seeder — 15 CSV files, 16 tables, FK-safe order | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
-| 8 | REST API — DTOs, services, 6 controllers, pagination, global exception handling | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 6 | JWT authentication - Spring Security 6, filter chain | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 7 | Data seeder - 15 CSV files, 16 tables, FK-safe order | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
+| 8 | REST API - DTOs, services, 6 controllers, pagination, global exception handling | ![Done](https://img.shields.io/badge/Done-brightgreen?style=flat-square) |
 
-### 🔄 Phase 2 — Frontend (In Progress)
+### 🔄 Phase 2 - Frontend (In Progress) - https://github.com/mcervieri/pokeapp-frontend
 
 | Module | Topic | Status |
 |---|---|---|
 | F1 | Vite + React setup, routing | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F2 | Auth pages — register, login, JWT storage | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F3 | Pokédex — list, filters, detail page | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F2 | Auth pages - register, login, JWT storage | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F3 | Pokédex - list, filters, detail page | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | F4 | Team builder UI | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F5 | User profile — favorites, Pokédex progress | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F5 | User profile - favorites, Pokédex progress | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | F6 | Comments, ratings, social features | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
-| F7 | Polish — responsive design, loading states, error handling | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| F7 | Polish - responsive design, loading states, error handling | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 
-### 🔮 Phase 3 — Extras (Planned)
+### 🔮 Phase 3 - Extras (Planned)
 
 | Module | Topic | Status |
 |---|---|---|
-| E1 | Docker — containerize the full application | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
+| E1 | Docker - containerize the full application | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | E2 | Cloud deployment (Railway / Render) | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | E3 | TCG module | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
 | E4 | TCG Pocket module | ![Pending](https://img.shields.io/badge/Pending-lightgrey?style=flat-square) |
@@ -454,12 +452,12 @@ This project is built as a self-paced course. Each lesson follows a **what → w
 
 ---
 
-## Future — TCG Modules
+## Future - TCG Modules
 
 ![Planned](https://img.shields.io/badge/Status-Planned-blueviolet?style=for-the-badge)
 ![Self-contained](https://img.shields.io/badge/Data-100%25_Own_Database-2ea44f?style=for-the-badge)
 
-Just like the main game module, **both TCG modules own their data entirely** — no external API at runtime. Card data will be seeded directly from open community datasets into our own PostgreSQL database.
+Just like the main game module, **both TCG modules own their data entirely** - no external API at runtime. Card data will be seeded directly from open community datasets into our own PostgreSQL database.
 
 ### Why two modules?
 
@@ -474,7 +472,7 @@ TCG and TCG Pocket are fundamentally different games:
 | Card source | Physical sets since 1996 | Digital packs since 2024 |
 | User feature | Deck builder | Collection tracker + Wonder Pick |
 
-### `pokeapp-tcg` — Physical Card Game
+### `pokeapp-tcg` - Physical Card Game
 
 Covers every expansion from Base Set (1996) to the latest Scarlet & Violet sets, with a full 60-card deck builder and legality validation.
 
